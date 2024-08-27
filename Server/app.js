@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 import express from "express";
 import dbConfig from "./config/dbConfig.js";
-
+import songRouter from "./routes/songRoutes.js";
 dotenv.config();
 // Create express app
 const app = express();
@@ -20,6 +20,9 @@ await dbConfig();
 app.get("/", (req, res) => {
   res.send("Hello World");
 });
+
+// Use the song router
+app.use("/api/songs", songRouter);
 
 // Start the express server
 app.listen(port, () => {
