@@ -2,6 +2,7 @@ import dotenv from "dotenv";
 import express from "express";
 import dbConfig from "./config/dbConfig.js";
 import songRouter from "./routes/songRoutes.js";
+import statRouter from "./routes/statsRoutes.js";
 import { handleError, notFound } from "./middlewares/errorHandlerMiddleware.js";
 dotenv.config();
 // Create express app
@@ -24,6 +25,9 @@ app.get("/", (req, res) => {
 
 // Use the song router
 app.use("/api/songs", songRouter);
+
+// Use the stats router
+app.use("/api/stats", statRouter);
 
 // Error handling middleware
 app.use(notFound);
