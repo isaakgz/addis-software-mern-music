@@ -12,7 +12,7 @@ By defining a custom ErrorHandler class, developers can create instances of this
 
 // This middleware is used to handle errors in the application. It is used to catch errors and send a response to the client with the error message and status code.
 
-class ErrorHandler extends Error {
+class AppError extends Error {
   constructor(statusCode, message) {
     super();
     this.statusCode = statusCode;
@@ -27,12 +27,20 @@ const handleError = (err, res) => {
   if (err.name === "ValidationError") {
     // Extract error messages from the ValidationError object if there multiple errors
     const message = Object.values(err.errors).map((value) => value.message);
-    const error = new ErrorHandler(400, message);
-    res.status(error.statusCode).json({ message: error.message });
+    const error = new AppError(400, message);
+    res.status(error.statusCode).json({
+      statusCode: error.statusCode,
+      status: "error",
+      message: error.message,
+    });
   } else if (err.name === "CastError") {
     const message = `Resource not found. Invalid: ${err.path}`;
-    const error = new ErrorHandler(404, message);
-    res.status(error.statusCode).json({ message: error.message });
+    const error = new AppError(404, message);
+    res.status(error.statusCode).json({
+      statusCode: error.statusCode,
+      status: "error",
+      message: error.message,
+    });
   } else {
     //for other errors
     const { statusCode, message } = err;
@@ -46,8 +54,8 @@ const handleError = (err, res) => {
 
 //error handler for unhandled routes
 const notFound = (req, res, next) => {
-  const error = new ErrorHandler(404, `Not Found - ${req.originalUrl}`);
+  const error = new AppError(404, `Not Found - ${req.originalUrl}`);
   next(error);
 };
 
-export { ErrorHandler, handleError, notFound };
+export { AppError,  handleError, notFound };
