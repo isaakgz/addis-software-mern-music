@@ -10,6 +10,8 @@ After calling super(), the constructor assigns the statusCode and message parame
 By defining a custom ErrorHandler class, developers can create instances of this class to represent different types of errors in their code. They can set the statusCode and message properties to provide specific information about the error. This can be useful for handling and displaying errors in a consistent and meaningful way throughout an application.
  */
 
+import mongoose from "mongoose";
+
 // This middleware is used to handle errors in the application. It is used to catch errors and send a response to the client with the error message and status code.
 
 class AppError extends Error {
@@ -20,42 +22,64 @@ class AppError extends Error {
   }
 }
 
-// This function is used to handle errors in the application. It checks the type of error and sends an appropriate response to the client.
-const handleError = (err, res) => {
-  //check if the error is mongoose error
+// Helper function to send error response
+const sendErrorResponse = (res, error, stack) => {
+  const response = {
+    statusCode: error.statusCode,
+    status: "error",
+    message: error.message,
+  };
 
-  if (err.name === "ValidationError") {
-    // Extract error messages from the ValidationError object if there multiple errors
-    const message = Object.values(err.errors).map((value) => value.message);
-    const error = new AppError(400, message);
-    res.status(error.statusCode).json({
-      statusCode: error.statusCode,
-      status: "error",
-      message: error.message,
-    });
-  } else if (err.name === "CastError") {
-    const message = `Resource not found. Invalid: ${err.path}`;
-    const error = new AppError(404, message);
-    res.status(error.statusCode).json({
-      statusCode: error.statusCode,
-      status: "error",
-      message: error.message,
-    });
-  } else {
-    //for other errors
-    const { statusCode, message } = err;
-    res.status(statusCode || 500).json({
-      statusCode: statusCode,
-      status: "error",
-      message: message || "Internal Server Error",
-    });
+  if (process.env.NODE_ENV === "development" && stack) {
+    response.stack = stack;
   }
+
+  res.status(error.statusCode).json(response);
 };
 
-//error handler for unhandled routes
+// This function is used to handle errors in the application. It checks the type of error and sends an appropriate response to the client.
+const handleError = (err, res) => {
+  let error;
+
+  if (err.name === "ValidationError") {
+    // Extract error messages from the ValidationError object if there are multiple errors
+    const message = Object.values(err.errors)
+      .map((value) => value.message)
+      .join(", ");
+    error = new AppError(400, message);
+  } else if (err.name === "CastError") {
+    const message = `Resource not found. Invalid: ${err.path}`;
+    error = new AppError(404, message);
+  } else if (err.message && err.message.includes("Cast to ObjectId failed")) {
+    const message = `Invalid ID format: ${err.value}`;
+    error = new AppError(400, message);
+  } else if (err instanceof  mongoose.Error.CastError) {
+    const message = Object.values(err.errors)
+      .map((value) => value.message) 
+      .join(", ");
+    error = new AppError(400, message);
+  } else {
+    // For other errors
+    const { statusCode = 500, message = "Internal Server Error" } = err;
+    error = new AppError(statusCode, message);
+  }
+
+  sendErrorResponse(res, error, err.stack);
+};
+// Middleware to validate ObjectId globally
+const validateObjectId = (req, res, next) => {
+  const id = req.params.id || req.body.id || req.query.id;
+  if (id && !mongoose.isValidObjectId(id)) {
+    const error = new AppError(404, `Invalid ObjectId: ${id}`);
+    return next(error);
+  }
+  next();
+};
+
+// Error handler for unhandled routes
 const notFound = (req, res, next) => {
   const error = new AppError(404, `Not Found - ${req.originalUrl}`);
   next(error);
 };
 
-export { AppError,  handleError, notFound };
+export { AppError, handleError, notFound, validateObjectId };

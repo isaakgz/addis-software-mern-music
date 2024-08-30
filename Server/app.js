@@ -2,10 +2,14 @@ import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import express from "express";
 import dbConfig from "./config/dbConfig.js";
-import { handleError, notFound } from "./middlewares/errorHandlerMiddleware.js";
+import {
+  handleError,
+  notFound
+} from "./middlewares/errorHandlerMiddleware.js";
 import authRouter from "./routes/authRoutes.js";
 import songRouter from "./routes/songRoutes.js";
 import statRouter from "./routes/statsRoutes.js";
+import userRouter from "./routes/userRoutes.js";
 dotenv.config();
 // Create express app
 const app = express();
@@ -20,6 +24,8 @@ app.use(express.urlencoded({ extended: true }));
 //middleware to parse cookies
 app.use(cookieParser());
 
+
+
 // Create a simple route
 app.get("/", (req, res) => {
   res.send("Hello World");
@@ -33,6 +39,9 @@ app.use("/api/stats", statRouter);
 
 // Use auth router
 app.use("/api/auth", authRouter);
+
+//use user router
+app.use("/api/users", userRouter);
 
 // Error handling middleware
 app.use(notFound);
