@@ -13,7 +13,6 @@ const getOverallStats = async (req, res, next) => {
     const totalArtists = await Song.distinct("artist").then(
       (artist) => artist.length
     );
-    console.log(totalArtists);
     const totalAlbums = await Song.distinct("album").then(
       (album) => album.length
     );
