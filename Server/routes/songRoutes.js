@@ -10,31 +10,26 @@ import {
   deleteSong,
 } from "../controllers/songController.js";
 
-//create a router
+// create a router
 const router = express.Router();
 
-//route to get all songs
-router.get("/", getSongs);
+// route to get all songs and add a song
+router.route("/").get(getSongs).post(addSong);
 
-//route to get a song by id
+// route to get a song by id
 router.get("/id/:id", getSongById);
 
-//route to get songs by artist
+// route to get songs by artist
 router.get("/artist/:artist", getSongByArtist);
 
-//route to get songs by genre
+// route to get songs by genre
 router.get("/genre/:genre", getSongByGenre);
 
-//route to get songs by album
+// route to get songs by album
 router.get("/album/:album", getSongsByAlbum);
 
-//route to add a song
-router.post("/", addSong);
+// route to update song by id and remove song by id
+router.route("/:id").put(updateSong).delete(deleteSong);
 
-//route to update song
-router.put("/:id", updateSong);
-
-//route to delete song
-router.delete("/:id", deleteSong);
-//export the router
+// export the router
 export default router;

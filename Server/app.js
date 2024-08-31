@@ -2,15 +2,11 @@ import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import express from "express";
 import dbConfig from "./config/dbConfig.js";
-import {
-  handleError,
-  notFound
-} from "./middlewares/errorHandlerMiddleware.js";
-import authRouter from "./routes/authRoutes.js";
-import songRouter from "./routes/songRoutes.js";
-import statRouter from "./routes/statsRoutes.js";
-import userRouter from "./routes/userRoutes.js";
+import { handleError, notFound } from "./middlewares/errorHandlerMiddleware.js";
+import router from "./routes/index.js";
 dotenv.config();
+
+
 // Create express app
 const app = express();
 // Connect to the database
@@ -24,24 +20,13 @@ app.use(express.urlencoded({ extended: true }));
 //middleware to parse cookies
 app.use(cookieParser());
 
-
-
 // Create a simple route
 app.get("/", (req, res) => {
   res.send("Hello World");
 });
 
-// Use the song router
-app.use("/api/songs", songRouter);
-
-// Use the stats router
-app.use("/api/stats", statRouter);
-
-// Use auth router
-app.use("/api/auth", authRouter);
-
-//use user router
-app.use("/api/users", userRouter);
+//main router
+app.use(router);
 
 // Error handling middleware
 app.use(notFound);
