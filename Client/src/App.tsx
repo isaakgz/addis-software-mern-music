@@ -1,5 +1,14 @@
+/** @jsxImportSource @emotion/react */
+
+import Sidebar from "./components/sideBar/Sidebar";
+
 function App() {
-  return <div>hello</div>;
+  return (
+    <>
+      <Sidebar />
+      {/* <TestComponent /> */}
+    </>
+  );
 }
 
 export default App;
