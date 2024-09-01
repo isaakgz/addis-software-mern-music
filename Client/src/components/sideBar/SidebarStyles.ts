@@ -2,12 +2,19 @@ import styled from "@emotion/styled";
 
 export const SidebarContainer = styled.div<{ open: boolean }>`
   width: ${(props) => (props.open ? "18rem" : "3rem")};
-  background-image: linear-gradient(to right bottom, #203636, #1e2d29, #1b241f, #171b16, #11120e);
-  height: 100vh;
+  background-image: linear-gradient(
+    to right bottom,
+    #203636,
+    #1e2d29,
+    #1b241f,
+    #171b16,
+    #11120e
+  );
+  height: 90vh;
   padding: 1rem;
   padding-top: 2rem;
   border-top-right-radius: 1.5rem;
-  position: fixed;
+  position: relative;
   transition: width 0.3s;
   border-right: 8px solid rgb(235, 235, 235);
   @media (max-width: 768px) {
@@ -63,7 +70,8 @@ export const MenuItem = styled.li<{ gap: boolean; active: boolean }>`
   gap: 1rem;
   font-weight: 500;
   margin-top: ${(props) => (props.gap ? "2.25rem" : "0.5rem")};
-  background-color: ${(props) => (props.active ? "rgba(255, 255, 255, 0.2)" : "transparent")};
+  background-color: ${(props) =>
+    props.active ? "rgba(255, 255, 255, 0.2)" : "transparent"};
 `;
 
 export const MenuIcon = styled.img`
