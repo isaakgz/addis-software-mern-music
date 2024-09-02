@@ -27,9 +27,12 @@ const BannerContainer = styled.div`
 `;
 
 const BannerText = styled.h1`
-  color: #93a4acfb;
+  color: white;
   font-size: 3rem;
   font-weight: 700;
+  background-color: #83778d96;
+  border-radius: 0.5rem;
+  padding: 1rem;
 
   @media (max-width: 768px) {
     font-size: 2rem; /* Adjust font size for smaller screens */

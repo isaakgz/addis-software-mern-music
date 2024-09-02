@@ -1,8 +1,9 @@
 /** @jsxImportSource @emotion/react */
 
 import { css } from "@emotion/react";
-import Sidebar from "./components/sideBar/Sidebar";
 import Banner from "./components/Banner/Banner";
+import Sidebar from "./components/sideBar/Sidebar";
+import Songs from "./components/Songs/Songs";
 
 function App() {
   return (
@@ -22,6 +23,8 @@ function App() {
           `}
         >
           <Banner />
+
+          <Songs />
         </div>
       </div>
     </>
