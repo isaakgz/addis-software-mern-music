@@ -1,30 +1,22 @@
-import React from "react";
-import InfoCard from "../InfoCard/InfoCard";
 import artistIcon from "../../assets/icons/artist.png";
+import { useAppSelector } from "../../store";
+import InfoCard from "../InfoCard/InfoCard";
 
 function Artists() {
+  const { statusData } = useAppSelector((state) => state.statistics);
+ 
+
   return (
     <>
-      <InfoCard
-        name="Artists"
-        count={10}
-        imageUrl={artistIcon}
-      />
-      <InfoCard
-        name="Artists"
-        count={10}
-        imageUrl={artistIcon}
-      />
-      <InfoCard
-        name="Artists"
-        count={10}
-        imageUrl={artistIcon}
-      />
-      <InfoCard
-        name="Artists"
-        count={10}
-        imageUrl={artistIcon}
-      />
+      {statusData &&
+        statusData.songsAndAlbumsByArtist.map((artist) => (
+          <InfoCard
+            key={artist.artist}
+            name={artist.artist}
+            count={artist.totalSongs}
+            imageUrl={artistIcon}
+          />
+        ))}
     </>
   );
 }
