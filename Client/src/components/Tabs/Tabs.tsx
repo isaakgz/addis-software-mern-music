@@ -1,5 +1,9 @@
 import styled from "@emotion/styled";
-import { ReactNode, useState } from "react";
+import { useState } from "react";
+import Albums from "../Albums/Albums";
+import Artists from "../Artists/Artists";
+import Genres from "../Generes/Genres";
+import Songs from "../Songs/Songs";
 
 const TabsContainer = styled.div`
   display: flex;
@@ -49,12 +53,24 @@ const TabsContent = styled.div`
   height: 50vh;
 `;
 
-interface TabProps {
-  children?: ReactNode;
-}
-function Tabs({ children }: TabProps) {
+function Tabs() {
   const tabs = ["Songs", "Albums", "Artists", "Genres"];
   const [activeTab, setActiveTab] = useState(tabs[0]);
+
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case "Songs":
+        return <Songs />;
+      case "Albums":
+        return <Albums />;
+      case "Artists":
+        return <Artists />;
+      case "Genres":
+        return <Genres />;
+      default:
+        return <Songs />; // Default to songs
+    }
+  };
   return (
     <>
       <TabsContainer>
@@ -68,7 +84,7 @@ function Tabs({ children }: TabProps) {
           </Tab>
         ))}
       </TabsContainer>
-      <TabsContent>{children}</TabsContent>
+      <TabsContent>{renderTabContent()}</TabsContent>
     </>
   );
 }
