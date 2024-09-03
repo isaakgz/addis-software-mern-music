@@ -3,8 +3,8 @@ import { useAppSelector } from "../../store";
 import InfoCard from "../InfoCard/InfoCard";
 
 function Artists() {
+  //reading the status data from the Redux store
   const { statusData } = useAppSelector((state) => state.statistics);
- 
 
   return (
     <>

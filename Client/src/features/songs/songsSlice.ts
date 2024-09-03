@@ -1,13 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
-interface Song {
-  id: number;
-  title: string;
-  artist: string;
-  album: string;
-  genre: string;
-  albumImageUrl: string;
-}
+import { Song } from "../../types/songTypes";
 
 interface SongsState {
   songs: Song[];

@@ -1,26 +1,4 @@
-import styled from "@emotion/styled";
-
-const LoaderContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-`;
-const MusicIcon = styled.svg`
-  width: 50px;
-  height: 50px;
-  animation: bounce 1s infinite;
-
-  @keyframes bounce {
-    0%,
-    100% {
-      transform: translateY(0);
-    }
-    50% {
-      transform: translateY(-15px);
-    }
-  }
-`;
+import { MusicIcon, LoaderContainer } from "./LoadingSpinnerStyles";
 function LoadingSpinner() {
   return (
     <LoaderContainer>

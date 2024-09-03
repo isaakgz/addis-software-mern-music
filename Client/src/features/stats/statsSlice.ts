@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { StatsData } from "../../services/api";
+import { StatsData } from "../../types/statsTypes";
 
 interface StatusState {
   status: "idle" | "loading" | "failed";

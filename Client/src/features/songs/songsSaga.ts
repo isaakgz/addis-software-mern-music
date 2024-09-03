@@ -1,5 +1,6 @@
 import { call, put, takeLatest } from "redux-saga/effects";
-import { fetchSongs, Song } from "../../services/api";
+import { fetchSongs } from "../../services/songServices";
+import { Song } from "../../types/songTypes";
 import {
   fetchSongsFailure,
   fetchSongsRequest,

@@ -1,10 +1,11 @@
 import { AxiosError } from "axios";
 import { call, put, takeLatest } from "redux-saga/effects";
-import { fetchStats, StatsData } from "../../services/api";
+import { fetchStats } from "../../services/statsServices";
+import { StatsData } from "../../types/statsTypes";
 import {
-    fetchStatusFailure,
-    fetchStatusRequest,
-    fetchStatusSuccess,
+  fetchStatusFailure,
+  fetchStatusRequest,
+  fetchStatusSuccess,
 } from "./statsSlice";
 
 function* fetchStatsSaga() {

@@ -5,12 +5,16 @@ import { useAppDispatch, useAppSelector } from "../../store";
 import InfoCard from "../InfoCard/InfoCard";
 import Error from "../Error/Error";
 import LoadingSpinner from "../LoadingSpinner.tsx/LoadingSpinner";
+
 function Albums() {
+  //state  variables and functions to dispatch actions and read data from the Redux store
   const { statusData, status, error } = useAppSelector(
     (state) => state.statistics
   );
   const dispatch = useAppDispatch();
 
+
+  //fetching the status data when the component mounts
   useEffect(() => {
     dispatch(fetchStatusRequest());
   }, [dispatch]);

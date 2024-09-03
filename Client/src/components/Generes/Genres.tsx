@@ -6,10 +6,12 @@ import Error from "../Error/Error";
 import { fetchStatusRequest } from "../../features/stats/statsSlice";
 
 function Genres() {
+  //reading the status data from the Redux store
   const { statusData, status, error } = useAppSelector(
     (state) => state.statistics
   );
   const dispatch = useAppDispatch();
+
   if (status === "loading") {
     return <LoadingSpinner />;
   } else if (status === "failed" && error) {
@@ -28,10 +30,6 @@ function Genres() {
             imageUrl={genresIcon}
           />
         ))}
-      {/* <InfoCard name="Genres" count={10} imageUrl={genresIcon} />
-      <InfoCard name="Genres" count={10} imageUrl={genresIcon} />
-      <InfoCard name="Genres" count={10} imageUrl={genresIcon} />
-      <InfoCard name="Genres" count={10} imageUrl={genresIcon} /> */}
     </>
   );
 }
