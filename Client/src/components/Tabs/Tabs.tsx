@@ -49,7 +49,7 @@ const TabsContent = styled.div`
   max-width: 800px;
   border: 1px solid #f5f5f5;
   height: 100vh;
-  overflow: auto;
+  overflow: hidden auto;
   height: 50vh;
 `;
 

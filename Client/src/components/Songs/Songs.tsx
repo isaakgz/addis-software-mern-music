@@ -5,6 +5,9 @@ import { useEffect } from "react";
 import music from "../../assets/icons/music.svg";
 import { fetchSongsRequest } from "../../features/songs/songsSlice";
 import { useAppDispatch, useAppSelector } from "../../store";
+import Error from "../Error/Error";
+import { fetchStatusRequest } from "../../features/stats/statsSlice";
+import LoadingSpinner from "../LoadingSpinner.tsx/LoadingSpinner";
 
 const ListContainer = styled.div`
   display: flex;
@@ -56,7 +59,7 @@ const TitleWrapper = styled.div`
   }
 
   @media (max-width: 768px) {
-    align-items:flex-start;
+    align-items: flex-start;
     text-align: center;
     margin-left: 0;
     margin-bottom: 1rem;
@@ -102,10 +105,16 @@ function Songs() {
     dispatch(fetchSongsRequest());
   }, [dispatch]);
 
+  if (status === "loading") {
+    return <LoadingSpinner />;
+  } else if (status === "failed" && error) {
+    return (
+      <Error message={error} onRetry={() => dispatch(fetchStatusRequest())} />
+    );
+  }
+
   return (
     <ListContainer>
-      {status === "loading" && <h1>Loading...</h1>}
-      {status === "failed" && <h1>{error}</h1>}
       {songs.map((song) => (
         <ListItem key={song.id}>
           <TitleWrapper>
@@ -119,7 +128,6 @@ function Songs() {
 
                 @media (max-width: 768px) {
                   justify-content: center;
-                  
                 }
               `}
             >

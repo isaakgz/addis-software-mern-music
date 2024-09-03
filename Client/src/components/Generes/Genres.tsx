@@ -1,9 +1,22 @@
 import genresIcon from "../../assets/icons/music.png";
-import { useAppSelector } from "../../store";
+import { useAppDispatch, useAppSelector } from "../../store";
 import InfoCard from "../InfoCard/InfoCard";
+import LoadingSpinner from "../LoadingSpinner.tsx/LoadingSpinner";
+import Error from "../Error/Error";
+import { fetchStatusRequest } from "../../features/stats/statsSlice";
 
 function Genres() {
-  const { statusData } = useAppSelector((state) => state.statistics);
+  const { statusData, status, error } = useAppSelector(
+    (state) => state.statistics
+  );
+  const dispatch = useAppDispatch();
+  if (status === "loading") {
+    return <LoadingSpinner />;
+  } else if (status === "failed" && error) {
+    return (
+      <Error message={error} onRetry={() => dispatch(fetchStatusRequest())} />
+    );
+  }
   return (
     <>
       {statusData &&
