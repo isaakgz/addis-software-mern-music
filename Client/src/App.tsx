@@ -4,6 +4,8 @@ import { css } from "@emotion/react";
 import Banner from "./components/Banner/Banner";
 import Sidebar from "./components/sideBar/Sidebar";
 import Songs from "./components/Songs/Songs";
+import Tabs from "./components/Tabs/Tabs";
+
 
 function App() {
   return (
@@ -24,7 +26,9 @@ function App() {
         >
           <Banner />
 
-          <Songs />
+          <Tabs>
+            <Songs />
+          </Tabs>
         </div>
       </div>
     </>

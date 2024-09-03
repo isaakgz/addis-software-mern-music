@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import React, { ReactNode, useState } from "react";
+import { ReactNode, useState } from "react";
 
 const TabsContainer = styled.div`
   display: flex;
@@ -44,13 +44,16 @@ const TabsContent = styled.div`
   width: 100%;
   max-width: 800px;
   border: 1px solid #f5f5f5;
+  height: 100vh;
+  overflow: auto;
+  height: 50vh;
 `;
 
 interface TabProps {
-  children?: ReactNode[];
-  tabs: string[];
+  children?: ReactNode;
 }
-function Tabs({ tabs, children }: TabProps) {
+function Tabs({ children }: TabProps) {
+  const tabs = ["Songs", "Albums", "Artists", "Genres"];
   const [activeTab, setActiveTab] = useState(tabs[0]);
   return (
     <>
@@ -65,17 +68,7 @@ function Tabs({ tabs, children }: TabProps) {
           </Tab>
         ))}
       </TabsContainer>
-      <TabsContent>
-        {children &&
-          children.map((child, index) => (
-            <div
-              key={index}
-              style={{ display: activeTab === tabs[index] ? "block" : "none" }}
-            >
-              {child}
-            </div>
-          ))}
-      </TabsContent>
+      <TabsContent>{children}</TabsContent>
     </>
   );
 }
