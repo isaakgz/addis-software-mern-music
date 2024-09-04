@@ -19,15 +19,17 @@ import favs from "../../assets/icons/favs.svg";
 import stats from "../../assets/icons/stat.svg";
 import logout from "../../assets/icons/logout.svg";
 import person from "../../assets/icons/person.svg";
+import { Link } from "react-router-dom";
+import { css } from "@emotion/react";
 
 const MENUS = [
-  { title: "Home", src: home, gap: false },
-  { title: "Add Music", src: addMuisc, gap: false },
-  { title: "My Favorites", src: favs, gap: true },
-  { title: "PlayLists", src: playlists, gap: false },
-  { title: "Statistics", src: stats, gap: false },
-  { title: "Isaak", src: person, gap: true },
-  { title: "Logout", src: logout, gap: false },
+  { title: "Home", src: home, gap: false, path: "/" },
+  { title: "Add Music", src: addMuisc, gap: false, path: "/add-music" },
+  { title: "My Favorites", src: favs, gap: true, path: "/favorites" },
+  { title: "PlayLists", src: playlists, gap: false, path: "/playlists" },
+  { title: "Statistics", src: stats, gap: false, path: "/statistics" },
+  { title: "Isaak", src: person, gap: true, path: "/profile" },
+  { title: "Logout", src: logout, gap: false, path: "/auth" },
 ];
 
 const Sidebar = () => {
@@ -56,14 +58,18 @@ const Sidebar = () => {
         </div>
         <MenuList>
           {MENUS.map((menu, index) => (
-            <MenuItem
+            <Link
               key={index}
-              gap={menu.gap}
-              active={menu.title === "Overview"}
+              to={menu.path}
+              css={css`
+                text-decoration: none;
+              `}
             >
-              <MenuIcon src={menu.src} alt={`${menu.title} icon`} />
-              <MenuTitle open={open}>{menu.title}</MenuTitle>
-            </MenuItem>
+              <MenuItem gap={menu.gap} active={menu.title === "Overview"}>
+                <MenuIcon src={menu.src} alt={`${menu.title} icon`} />
+                <MenuTitle open={open}>{menu.title}</MenuTitle>
+              </MenuItem>
+            </Link>
           ))}
         </MenuList>
       </SidebarContainer>

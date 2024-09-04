@@ -8,7 +8,7 @@ export const BannerContainer = styled.div`
   background-position: center; /* Centers the image */
   background-repeat: no-repeat; /* Prevents the image from repeating */
   width: 100%;
-  height: 25vh; /* Adjust height as needed */
+  height: 22vh; /* Adjust height as needed */
   display: flex;
   align-items: center;
   justify-content: center;

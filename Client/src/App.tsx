@@ -3,34 +3,39 @@
 import { css } from "@emotion/react";
 import Banner from "./components/Banner/Banner";
 import Sidebar from "./components/sideBar/Sidebar";
-import Tabs from "./components/Tabs/Tabs";
-import MusicForm from "./components/MuiscForm/MusicForm";
+import { Outlet, Navigate } from "react-router-dom";
 
 function App() {
-  return (
-    <>
-      <div
-        css={css`
-          display: flex;
-          gap: 1rem;
-          /* position: fixed; */
-        `}
-      >
-        <Sidebar />
+  const user = "h";
 
+  if (user) {
+    return (
+      <>
         <div
           css={css`
-            flex: 1;
+            display: flex;
+            gap: 1rem;
+            /* position: fixed; */
           `}
         >
-          <Banner />
+          <Sidebar />
 
-          {/* <Tabs /> */}
-          <MusicForm />
+          <div
+            css={css`
+              flex: 1;
+            `}
+          >
+            <Banner />
+            <Outlet />
+            {/* <Tabs /> */}
+            {/* <MusicForm /> */}
+          </div>
         </div>
-      </div>
-    </>
-  );
+      </>
+    );
+  } else {
+    <Navigate to="/auth" />;
+  }
 }
 
 export default App;
