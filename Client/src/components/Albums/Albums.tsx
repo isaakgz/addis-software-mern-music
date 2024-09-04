@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import albumCover from "../../assets/icons/cd-cover (1).png";
 import { fetchStatusRequest } from "../../features/stats/statsSlice";
 import { useAppDispatch, useAppSelector } from "../../store";
@@ -13,11 +13,13 @@ function Albums() {
   );
   const dispatch = useAppDispatch();
 
-
   //fetching the status data when the component mounts
   useEffect(() => {
     dispatch(fetchStatusRequest());
   }, [dispatch]);
+
+  //memoizing the status data to prevent unnecessary re-renders
+  const memoizedStatusData = useMemo(() => statusData, [statusData]);
 
   if (status === "loading") {
     return <LoadingSpinner />;
@@ -28,8 +30,8 @@ function Albums() {
   }
   return (
     <>
-      {statusData &&
-        statusData.songsInEachAlbum.map((album) => (
+      {memoizedStatusData &&
+        memoizedStatusData.songsInEachAlbum.map((album) => (
           <InfoCard
             key={album.album}
             name={album.album}

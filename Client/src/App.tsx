@@ -4,6 +4,7 @@ import { css } from "@emotion/react";
 import Banner from "./components/Banner/Banner";
 import Sidebar from "./components/sideBar/Sidebar";
 import Tabs from "./components/Tabs/Tabs";
+import MusicForm from "./components/MuiscForm/MusicForm";
 
 function App() {
   return (
@@ -24,7 +25,8 @@ function App() {
         >
           <Banner />
 
-          <Tabs />
+          {/* <Tabs /> */}
+          <MusicForm />
         </div>
       </div>
     </>
