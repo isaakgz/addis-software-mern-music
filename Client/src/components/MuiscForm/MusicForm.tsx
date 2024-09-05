@@ -36,8 +36,8 @@ const InputContainer = styled.div`
   justify-content: center;
   border-radius: 10px;
   background-color:  #f5f5f5;
-  padding: 20px;
   box-shadow: 0 0 10px #ced1d4;
+  padding: 20px;
   form {
     display: flex;
     flex-direction: column;
