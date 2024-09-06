@@ -1,3 +1,4 @@
+/** @jsxImportSource @emotion/react */
 import styled from "@emotion/styled";
 
 export const SidebarContainer = styled.div<{ open: boolean }>`
@@ -53,9 +54,6 @@ export const MenuList = styled.ul`
   list-style: none;
   margin: 0;
   padding: 0;
-  & :hover {
-    background-color: rgba(255, 255, 255, 0.1);
-  }
 `;
 
 export const MenuItem = styled.li<{ gap: boolean; active: boolean }>`
@@ -72,6 +70,9 @@ export const MenuItem = styled.li<{ gap: boolean; active: boolean }>`
   margin-top: ${(props) => (props.gap ? "2.25rem" : "0.5rem")};
   background-color: ${(props) =>
     props.active ? "rgba(255, 255, 255, 0.2)" : "transparent"};
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
 `;
 
 export const MenuIcon = styled.img`

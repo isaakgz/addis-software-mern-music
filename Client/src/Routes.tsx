@@ -3,23 +3,54 @@ import AuthPage from "./pages/AuthPage/AuthPage";
 import App from "./App";
 import AddMusicPage from "./pages/AddMusicPage/AddMusicPage";
 import HomePage from "./pages/HomePage/HomePage";
+import LoginForm from "./components/AuthForm/Login";
+import SignUpForm from "./components/AuthForm/SignUp";
+import PrivateRoute from "./components/privateRoute/PrivateRoute";
 
 const router = createBrowserRouter([
   {
     path: "/auth",
     element: <AuthPage />,
+    children: [
+      {
+        path: "/auth",
+        element: <LoginForm />,
+      },
+      {
+        path: "/auth/register",
+        element: <SignUpForm />,
+      },
+    ],
   },
   {
     path: "/",
-    element: <App />,
+    element: <PrivateRoute />,
     children: [
       {
-        path: "/", // default route
-        element: <HomePage />,
-      },
-      {
-        path: "/add-music",
-        element: <AddMusicPage />,
+        path: "/",
+        element: <App />,
+        children: [
+          {
+            path: "/",
+            element: <HomePage />,
+          },
+          {
+            path: "/add-music",
+            element: <AddMusicPage />,
+          },
+          {
+            path: "/favorites",
+            element: <div>fav</div>,
+          },
+          {
+            path: "/playlists",
+            element: <div>playlists</div>,
+          },
+          {
+            path: "/statistics",
+            element: <div>statistics</div>,
+          },
+        ],
       },
     ],
   },

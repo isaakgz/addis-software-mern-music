@@ -1,41 +1,35 @@
 /** @jsxImportSource @emotion/react */
 
 import { css } from "@emotion/react";
+import { Outlet } from "react-router-dom";
 import Banner from "./components/Banner/Banner";
 import Sidebar from "./components/sideBar/Sidebar";
-import { Outlet, Navigate } from "react-router-dom";
 
 function App() {
-  const user = "h";
+  return (
+    <>
+      <div
+        css={css`
+          display: flex;
+          gap: 1rem;
+          /* position: fixed; */
+        `}
+      >
+        <Sidebar />
 
-  if (user) {
-    return (
-      <>
         <div
           css={css`
-            display: flex;
-            gap: 1rem;
-            /* position: fixed; */
+            flex: 1;
           `}
         >
-          <Sidebar />
-
-          <div
-            css={css`
-              flex: 1;
-            `}
-          >
-            <Banner />
-            <Outlet />
-            {/* <Tabs /> */}
-            {/* <MusicForm /> */}
-          </div>
+          <Banner />
+          <Outlet />
+          {/* <Tabs /> */}
+          {/* <MusicForm /> */}
         </div>
-      </>
-    );
-  } else {
-    <Navigate to="/auth" />;
-  }
+      </div>
+    </>
+  );
 }
 
 export default App;

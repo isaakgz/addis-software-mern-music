@@ -17,7 +17,7 @@ export const PageContainer = styled.div`
     justify-content: center;
     padding-top: 2rem;
     gap: 0;
-    height: 100vh;
+    height: 100%;
   }
 `;
 

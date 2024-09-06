@@ -87,4 +87,21 @@ const loginUser = async (req, res, next) => {
   }
 };
 
-export { registerUser, loginUser };
+// @desc   Logout a user
+// @route  POST /api/auth/logout
+// @access Private
+const logoutUser = async (req, res, next) => {
+  try {
+    //clear the session cookie
+    res.cookie("token", "", {
+      expires: new Date(Date.now() + 10 * 1000), //cookie will expire in 10 seconds
+      httpOnly: true,
+    });
+    sendResponse(res, 200, "success", {});
+  } catch (error) {
+    //pass the error to the error handler middleware
+    next(error);
+  }
+};
+
+export { registerUser, loginUser, logoutUser };
