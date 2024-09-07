@@ -6,6 +6,6 @@ import { protect } from "../middlewares/authMiddleware.js";
 const router = express.Router();
 
 // a route to get the overall stats
-router.get("/", getOverallStats);
+router.get("/", protect, getOverallStats);
 
 export default router;

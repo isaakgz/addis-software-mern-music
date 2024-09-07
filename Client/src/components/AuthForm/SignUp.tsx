@@ -13,7 +13,7 @@ import {
 import { FieldValues, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useAppDispatch, useAppSelector } from "../../store";
-import { signUpRequest } from "../../features/auth/authSlice";
+import { clearError, signUpRequest } from "../../features/auth/authSlice";
 import { Link, useNavigate } from "react-router-dom";
 
 function SignUpForm() {
@@ -32,6 +32,7 @@ function SignUpForm() {
   const password = watch("password");
   const onSubmit = (data: FieldValues) => {
     const { password, username, email } = data;
+    dispatch(clearError()); // clear error before making a request
     dispatch(signUpRequest({ username, email, password }));
   };
 
@@ -122,6 +123,7 @@ function SignUpForm() {
             <FormLink
               onClick={() => {
                 reset();
+                dispatch(clearError());
               }}
             >
               Login

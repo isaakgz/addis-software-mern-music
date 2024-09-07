@@ -11,7 +11,7 @@ function AuthPage() {
 
   //if user is logged in, redirect to the home page
   useEffect(() => {
-    if (user) {
+    if (user && localStorage.getItem("user")) {
       navigate("/");
     }
   }, [user, navigate]);

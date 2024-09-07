@@ -13,7 +13,7 @@ import {
   FormTitle,
   Input,
 } from "./AuthFormStyles";
-import { loginRequest } from "../../features/auth/authSlice";
+import { clearError, loginRequest } from "../../features/auth/authSlice";
 import toast from "react-hot-toast";
 
 function LoginForm() {
@@ -30,10 +30,10 @@ function LoginForm() {
 
   const onSubmit = (data: FieldValues) => {
     const { email, password } = data;
+    dispatch(clearError()); // clear error before making a request
     dispatch(loginRequest({ email, password }));
   };
   if (error) {
-    
     toast.error(error);
   } else if (user) {
     toast.success("Login successfull");
@@ -89,6 +89,7 @@ function LoginForm() {
             <FormLink
               onClick={() => {
                 reset();
+                dispatch(clearError());
               }}
             >
               Sign Up

@@ -54,8 +54,13 @@ const authSlice = createSlice({
     },
     logoutRequest(state) {
       state.user = null;
+      state.status = "idle";
+      state.error = null;
       localStorage.removeItem("user");
       localStorage.clear();
+    },
+    clearError(state) {
+      state.error = null;
     },
   },
 });
@@ -68,6 +73,7 @@ export const {
   loginRequest,
   loginSuccess,
   logoutRequest,
+  clearError
 } = authSlice.actions;
 
 export default authSlice.reducer;
