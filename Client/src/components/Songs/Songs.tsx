@@ -1,65 +1,94 @@
 /** @jsxImportSource @emotion/react */
-import { css } from "@emotion/react";
-import { useEffect } from "react";
-import music from "../../assets/icons/music.svg";
-import { fetchSongsRequest } from "../../features/songs/songsSlice";
-import { fetchStatusRequest } from "../../features/stats/statsSlice";
+import { useEffect, useState } from "react";
+import { FaEllipsisV } from "react-icons/fa";
 import { useAppDispatch, useAppSelector } from "../../store";
-import Error from "../Error/Error";
-import LoadingSpinner from "../LoadingSpinner.tsx/LoadingSpinner";
-import { AlbumWrapper, ListContainer, ListIcon, ListItem, TitleWrapper } from "./SongsStyles";
+import {
+  DropdownItem,
+  DropdownMenu,
+  Icon,
+  OptionsButton,
+  SongDetails,
+  SongInfo,
+  SongItem,
+  SongMeta,
+  SongTitle,
+  SongsContainer,
+} from "./SongsStyles";
+import { fetchSongsRequest } from "../../features/songs/songsSlice";
+import Modal from "../Modal/Modal";
+import MusicForm from "../MuiscForm/MusicForm";
 
-function Songs() {
-  const { songs, error, status } = useAppSelector((state) => state.songs);
+const Songs = () => {
+  const { songs } = useAppSelector((state) => state.songs);
   const dispatch = useAppDispatch();
-
   useEffect(() => {
     dispatch(fetchSongsRequest());
   }, [dispatch]);
 
-  if (status === "loading") {
-    return <LoadingSpinner />;
-  } else if (status === "failed" && error) {
-    return (
-      <Error message={error} onRetry={() => dispatch(fetchStatusRequest())} />
-    );
-  }
+  const [dropdownOpen, setDropdownOpen] = useState<string | null>(null);
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [selectedSong, setSelectedSong] = useState<string | null>(null);
+
+  const toggleDropdown = (id: string) => {
+    if (dropdownOpen === id) {
+      setDropdownOpen(null);
+    } else {
+      setDropdownOpen(id);
+    }
+  };
+
+  const openEditModal = (song: any) => {
+    setSelectedSong(song);
+    setModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+    setSelectedSong(null);
+  };
 
   return (
-    <ListContainer>
+    <SongsContainer>
       {songs.map((song) => (
-        <ListItem key={song.id}>
-          <TitleWrapper>
-            <div
-              css={css`
-                display: flex;
-                align-items: center;
-                justify-content: flex-start;
-                margin: 0;
-                padding: 0;
-
-                @media (max-width: 768px) {
-                  justify-content: center;
-                }
-              `}
-            >
-              <ListIcon src={music} alt="music" />
-              <h3>{song.title}</h3>
-            </div>
-            <p>{song.artist}</p>
-          </TitleWrapper>
-          <AlbumWrapper>
-            <p>Album</p>
-            <h3>{song.album}</h3>
-          </AlbumWrapper>
-          <AlbumWrapper>
-            <p>Genre</p>
-            <h3>{song.genre}</h3>
-          </AlbumWrapper>
-        </ListItem>
+        <SongItem key={song._id}>
+          <SongDetails>
+            <Icon />
+            <SongInfo>
+              <SongTitle>{song.title}</SongTitle>
+              <SongMeta>
+                {song.artist} • {song.album} • {song.genre}
+              </SongMeta>
+            </SongInfo>
+          </SongDetails>
+          <OptionsButton onClick={() => toggleDropdown(song._id)}>
+            <FaEllipsisV />
+            <DropdownMenu show={dropdownOpen === song._id}>
+              <DropdownItem
+                onClick={() => {
+                  openEditModal(song);
+                  setDropdownOpen(null);
+                }}
+              >
+                Edit
+              </DropdownItem>
+              <DropdownItem>Delete</DropdownItem>
+            </DropdownMenu>
+          </OptionsButton>
+        </SongItem>
       ))}
-    </ListContainer>
+      <Modal isOpen={isModalOpen} onClose={closeModal}>
+        <MusicForm
+          title="Edit Song"
+          handleSubmit={() => {}}
+          register={() => {}}
+          onSubmit={() => {}}
+          errors={{}}
+          formType="edit"
+          
+        />
+      </Modal>
+    </SongsContainer>
   );
-}
+};
 
 export default Songs;

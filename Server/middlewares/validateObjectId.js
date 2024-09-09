@@ -11,7 +11,6 @@ const validateObjectId = (req, res, next) => {
   if (songId && !mongoose.Types.ObjectId.isValid(songId)) {
     return next(new AppError(400, "Invalid song ID"));
   }
-
   next();
 };
 

@@ -12,6 +12,7 @@ import {
 } from "./authSlice";
 import { AxiosError } from "axios";
 import { User, SignUpPayload, LoginPayload } from "../../types/userTypes";
+import handleSagaError from "../../utils/errorHandlerSaga";
 
 // worker saga for sign up
 function* signUpSaga(action: PayloadAction<SignUpPayload>) {
@@ -19,13 +20,7 @@ function* signUpSaga(action: PayloadAction<SignUpPayload>) {
     const user: User = yield call(signUp, action.payload);
     yield put(signUpSuccess(user));
   } catch (error) {
-    if (error instanceof AxiosError) {
-      const errorMessage = error.response?.data.message || error.message;
-      yield put(signUpFailure(errorMessage));
-    } else {
-      console.log("unknown error", error);
-      yield put(signUpFailure((error as Error).message));
-    }
+    yield handleSagaError(error, signUpFailure);
   }
 }
 
@@ -35,13 +30,7 @@ function* loginSaga(action: PayloadAction<LoginPayload>) {
     const user: User = yield call(login, action.payload);
     yield put(loginSuccess(user));
   } catch (error) {
-    if (error instanceof AxiosError) {
-      const errorMessage = error.response?.data.message || error.message;
-      yield put(loginFailure(errorMessage));
-    } else {
-      console.log("unknown error", error);
-      yield put(loginFailure((error as Error).message));
-    }
+    yield handleSagaError(error, loginFailure);
   }
 }
 
@@ -50,13 +39,7 @@ function* logoutSaga() {
   try {
     yield call(logout);
   } catch (error) {
-    if (error instanceof AxiosError) {
-      const errorMessage = error.response?.data.message || error.message;
-      yield console.log(errorMessage);
-    } else {
-      console.log("unknown error", error);
-      yield put(loginFailure((error as Error).message));
-    }
+    yield handleSagaError(error, loginFailure);
   }
 }
 

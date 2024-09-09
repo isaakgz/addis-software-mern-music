@@ -14,3 +14,20 @@ export const fetchSongs = async (): Promise<SongResponse> => {
     throw error;
   }
 };
+
+interface SongPayload {
+  title: string;
+  artist: string;
+  album: string;
+  genre: string;
+}
+//add a song
+export const addSong = async (songData: SongPayload) => {
+  try {
+    const response = await api.post("/songs", songData);
+    return response.data.data.song;
+  } catch (error) {
+    console.log("Error adding song:", error);
+    throw error;
+  }
+};

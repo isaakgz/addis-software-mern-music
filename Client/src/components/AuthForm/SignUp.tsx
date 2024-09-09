@@ -15,6 +15,7 @@ import toast from "react-hot-toast";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { clearError, signUpRequest } from "../../features/auth/authSlice";
 import { Link, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 function SignUpForm() {
   const {
@@ -36,13 +37,19 @@ function SignUpForm() {
     dispatch(signUpRequest({ username, email, password }));
   };
 
-  if (error) {
-    toast.error(error);
-  } else if (user) {
-    toast.success("User created successfully");
-    reset();
-    navigate("/auth");
-  }
+  
+  useEffect(() => {
+    toast.dismiss(); // Dismiss any existing toasts
+    if (error) {
+      toast.error(error);
+    } else if (user) {
+      toast.success(`Welcome ${user.username}`);
+      navigate("/");
+      reset();
+    } else if (status === "loading") {
+      toast.loading("Creating account...");
+    }
+  }, [user, navigate, error, status, reset]);
 
   return (
     <FormContainer>

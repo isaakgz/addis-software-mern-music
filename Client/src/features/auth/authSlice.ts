@@ -31,6 +31,7 @@ const authSlice = createSlice({
     signUpSuccess(state, action: PayloadAction<User>) {
       state.user = action.payload;
       state.status = "idle";
+      localStorage.setItem("user", JSON.stringify(action.payload));
     },
     signUpFailure(state, action: PayloadAction<string>) {
       state.status = "failed";

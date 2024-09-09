@@ -1,15 +1,46 @@
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import MusicForm from "../../components/MuiscForm/MusicForm";
+import { useAppDispatch, useAppSelector } from "../../store";
+import { addSongRequest, clearError } from "../../features/songs/songsSlice";
+import toast from "react-hot-toast";
+import { useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 function AddMusicPage() {
   const {
     register,
     handleSubmit,
+
     formState: { errors },
   } = useForm();
+  const { error, songs, status } = useAppSelector((state) => state.songs);
+  const dispatch = useAppDispatch();
+  const previousSongsLength = useRef(songs.length);
+  const previousStatus = useRef(status);
+  const navigate = useNavigate();
 
+  // Handle form submission
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
-    console.log(data);
+    const { title, artist, album, genre } = data;
+    dispatch(addSongRequest({ title, artist, album, genre }));
   };
+
+  // Show toast messages
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+      dispatch(clearError()); // Clear the error after displaying it
+    } else if (
+      status === "idle" &&
+      songs.length > previousSongsLength.current
+    ) {
+      toast.success("Music added successfully");
+      previousSongsLength.current = songs.length;
+      navigate("/");
+    } else if (status === "loading" && previousStatus.current === "loading") {
+      toast.loading("Adding music...");
+    }
+    previousStatus.current = status;
+  }, [error, songs, status, dispatch]);
 
   return (
     <MusicForm
@@ -18,6 +49,8 @@ function AddMusicPage() {
       title="Add Your music"
       onSubmit={onSubmit}
       errors={errors}
+      formType="add"
+      isLoading={status === "loading"}
     />
   );
 }

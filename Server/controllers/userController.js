@@ -212,7 +212,7 @@ const deletePlaylist = async (req, res, next) => {
     const user = req.user;
     const { playlistId } = req.params;
 
-    // Find the playlist and remove it
+    // Find the playlist and remove it 
 
     const playlist = user.playlists.id(playlistId);
     if (!playlist) {

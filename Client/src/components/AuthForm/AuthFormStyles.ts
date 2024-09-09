@@ -5,9 +5,8 @@ export const FormContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%; /* Ensure it fills the height of the parent container */
   width: 100%;
-  padding: 2rem;
+  padding: 1rem;
   @media (max-width: 768px) {
     height: auto;
     padding: 2rem 0;

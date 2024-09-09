@@ -1,89 +1,139 @@
-/** @jsxImportSource @emotion/react */
+
 import styled from "@emotion/styled";
-export const ListContainer = styled.div`
+import { FaMusic } from "react-icons/fa";
+
+export const Colors = {
+  primary: "#ff6f61",
+  primaryHover: "#e65c50",
+  background: "rgba(255, 255, 255, 0.1)",
+  text: "white",
+  border: "rgba(255, 255, 255, 0.5)",
+  darkBackground: "#333",
+  darkHoverBackground: "#444",
+  lightText: "#666",
+  lightHoverText: "#333",
+};
+
+export const SongsContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
-  padding: 1rem;
+  padding: 2rem;
+  padding-top: 0;
+  overflow-y: auto;
+  background-color: ${Colors.background};
+  color: ${Colors.text};
+
+  @media (max-width: 768px) {
+    padding: 1rem;
+  }
 `;
 
-export const ListItem = styled.div`
-  padding: 1rem;
-  border-bottom: 1px solid #ddd;
-  width: 100%;
-  text-align: left;
+export const SongItem = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  cursor: pointer;
-  transition: all 0.3s;
-  border-radius: 5px;
+  padding: 10px;
+  margin: 10px 0;
+  width: 100%;
+  max-width: 600px;
+  border-radius: 10px;
+  background-color: ${Colors.darkBackground};
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease;
+
   &:hover {
-    background-color: #dddddd92;
+    background-color: ${Colors.darkHoverBackground};
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 600px) {
     flex-direction: column;
     align-items: flex-start;
+    padding: 15px;
   }
 `;
 
-export const TitleWrapper = styled.div`
+export const SongDetails = styled.div`
+  display: flex;
+  align-items: center;
+
+  @media (max-width: 600px) {
+    width: 100%;
+  }
+`;
+
+export const Icon = styled(FaMusic)`
+  margin-right: 15px;
+  font-size: 24px;
+  color: ${Colors.primary};
+
+  @media (max-width: 600px) {
+    font-size: 20px;
+    margin-right: 10px;
+  }
+`;
+
+export const SongInfo = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  gap: 0.5rem;
-  flex: 1; /* Ensure equal space */
-  width: 100%;
+`;
 
-  h3 {
-    margin: 0;
-    padding: 0;
-  }
+export const SongTitle = styled.div`
+  font-weight: bold;
+  font-size: 18px;
+  color: ${Colors.text};
 
-  p {
-    margin: 0;
-    padding: 0;
-    margin-left: 10px;
-  }
-
-  @media (max-width: 768px) {
-    align-items: flex-start;
-    text-align: center;
-    margin-left: 0;
-    margin-bottom: 1rem;
+  @media (max-width: 600px) {
+    font-size: 16px;
   }
 `;
 
-export const AlbumWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  gap: 0.5rem;
-  flex: 1; /* Ensure equal space */
-  margin-bottom: 1rem; /* Add space between AlbumWrapper and GenreWrapper */
+export const SongMeta = styled.div`
+  font-size: 14px;
+  color: ${Colors.lightText};
 
-  h3 {
-    margin: 0;
-    padding: 0;
-  }
-
-  p {
-    margin: 0;
-    padding: 0;
-  }
-
-  @media (max-width: 768px) {
-    align-items: center;
-    text-align: center;
+  @media (max-width: 600px) {
+    font-size: 12px;
   }
 `;
 
-export const ListIcon = styled.img`
-  width: 20px;
-  height: 20px;
-  margin-right: 10px;
+export const OptionsButton = styled.button`
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: ${Colors.lightText};
+  position: relative;
+
+  &:hover {
+    color: ${Colors.lightHoverText};
+  }
+
+  @media (max-width: 600px) {
+    align-self: flex-end;
+  }
+`;
+
+export const DropdownMenu = styled.div<{ show: boolean }>`
+  position: absolute;
+  right: 0;
+  top: 100%;
+  background-color: ${Colors.darkBackground};
+  border-radius: 5px;
+  padding: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: ${(props) => (props.show ? "block" : "none")};
+  z-index: 100;
+`;
+
+export const DropdownItem = styled.div`
+  padding: 8px 12px;
+  cursor: pointer;
+  color: ${Colors.text};
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: ${Colors.darkHoverBackground};
+  }
 `;

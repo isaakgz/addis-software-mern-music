@@ -37,14 +37,21 @@ const registerUser = async (req, res, next) => {
       password,
     });
 
-    // Send the response
-    sendResponse(res, 201, "success", {
-      user: {
-        _id: user._id,
-        username: user.username,
-        email: user.email,
-      },
-    });
+    if (user) {
+      //generate JWT  token for the user and set it cookie in the response
+      generateAndSetSessionToken(res, user._id);
+
+      // Send the response with the user data
+      sendResponse(res, 201, "success", {
+        user: {
+          _id: user._id,
+          username: user.username,
+          email: user.email,
+        },
+      });
+    } else {
+      throw new AppError(400, "Invalid  user data");
+    }
   } catch (error) {
     // Pass the error to the error handler middleware
     next(error);

@@ -15,6 +15,7 @@ import {
 } from "./AuthFormStyles";
 import { clearError, loginRequest } from "../../features/auth/authSlice";
 import toast from "react-hot-toast";
+import { useEffect } from "react";
 
 function LoginForm() {
   const {
@@ -33,13 +34,19 @@ function LoginForm() {
     dispatch(clearError()); // clear error before making a request
     dispatch(loginRequest({ email, password }));
   };
-  if (error) {
-    toast.error(error);
-  } else if (user) {
-    toast.success("Login successfull");
-    reset();
-    navigate("/");
-  }
+
+  useEffect(() => {
+    toast.dismiss(); // Dismiss all toasts before showing a new one
+    if (error) {
+      toast.error(error);
+    } else if (user) {
+      toast.success("Login successful");
+      reset();
+      navigate("/");
+    } else if (status === "loading") {
+      toast.loading("Logging in...");
+    }
+  }, [user, navigate, error, status ,reset]);
 
   return (
     <FormContainer>
