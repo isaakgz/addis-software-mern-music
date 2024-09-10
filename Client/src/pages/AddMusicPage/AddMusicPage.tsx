@@ -40,7 +40,7 @@ function AddMusicPage() {
       toast.loading("Adding music...");
     }
     previousStatus.current = status;
-  }, [error, songs, status, dispatch]);
+  }, [error, songs, status, dispatch, navigate]);
 
   return (
     <MusicForm

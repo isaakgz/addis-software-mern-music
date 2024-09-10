@@ -12,6 +12,7 @@ import {
   FormTitle,
   Input,
 } from "../AuthForm/AuthFormStyles";
+import { Song } from "../../types/songTypes";
 
 interface MusicFormProps {
   title: string;
@@ -23,6 +24,8 @@ interface MusicFormProps {
   formType: "add" | "edit";
   onSubmit: SubmitHandler<FieldValues>;
   isLoading?: boolean;
+  defaultValues?: Song | null;
+  // controller
 }
 
 function MusicForm({
@@ -32,6 +35,7 @@ function MusicForm({
   formType,
   onSubmit,
   isLoading,
+  defaultValues,
 }: MusicFormProps) {
   return (
     <FormContainer>
@@ -41,6 +45,7 @@ function MusicForm({
         </FormTitle>
 
         <Input
+          defaultValue={defaultValues?.title}
           type="text"
           placeholder="Song Name"
           {...register("title", {
@@ -60,6 +65,7 @@ function MusicForm({
           <ErrorMessage>{String(errors.title.message)}</ErrorMessage>
         )}
         <Input
+          defaultValue={defaultValues?.artist}
           type="text"
           placeholder="Artist"
           {...register("artist", {
@@ -78,6 +84,7 @@ function MusicForm({
           <ErrorMessage>{String(errors.artist.message)}</ErrorMessage>
         )}
         <Input
+          defaultValue={defaultValues?.album}
           type="text"
           placeholder="Album"
           {...register("album", {
@@ -96,6 +103,7 @@ function MusicForm({
           <ErrorMessage>{String(errors.album.message)}</ErrorMessage>
         )}
         <Input
+          defaultValue={defaultValues?.genre}
           type="text"
           placeholder="Genre"
           {...register("genre", {

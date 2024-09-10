@@ -3,6 +3,15 @@ import { useEffect, useState } from "react";
 import { FaEllipsisV } from "react-icons/fa";
 import { useAppDispatch, useAppSelector } from "../../store";
 import {
+  deleteSongRequest,
+  fetchSongsRequest,
+  updateSongRequest,
+} from "../../features/songs/songsSlice";
+import Modal from "../Modal/Modal";
+import MusicForm from "../MuiscForm/MusicForm";
+import { Song } from "../../types/songTypes";
+import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import {
   DropdownItem,
   DropdownMenu,
   Icon,
@@ -14,39 +23,76 @@ import {
   SongTitle,
   SongsContainer,
 } from "./SongsStyles";
-import { fetchSongsRequest } from "../../features/songs/songsSlice";
-import Modal from "../Modal/Modal";
-import MusicForm from "../MuiscForm/MusicForm";
 
+// Component Definition
 const Songs = () => {
-  const { songs } = useAppSelector((state) => state.songs);
+  // Redux hooks to dispatch actions and access the song state
+  const { songs, status } = useAppSelector((state) => state.songs);
   const dispatch = useAppDispatch();
+
+  // Local state management for dropdown and modal
+  const [dropdownOpen, setDropdownOpen] = useState<string | null>(null);
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [selectedSong, setSelectedSong] = useState<Song | null>(null);
+
+  // Form hook for handling song updates
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  // Fetch songs on component mount
   useEffect(() => {
     dispatch(fetchSongsRequest());
   }, [dispatch]);
 
-  const [dropdownOpen, setDropdownOpen] = useState<string | null>(null);
-  const [isModalOpen, setModalOpen] = useState(false);
-  const [selectedSong, setSelectedSong] = useState<string | null>(null);
-
+  // Handle dropdown toggle
   const toggleDropdown = (id: string) => {
-    if (dropdownOpen === id) {
-      setDropdownOpen(null);
-    } else {
-      setDropdownOpen(id);
-    }
+    setDropdownOpen((prev) => (prev === id ? null : id));
   };
 
-  const openEditModal = (song: any) => {
+  // Open edit modal with selected song data
+  const openEditModal = (song: Song) => {
     setSelectedSong(song);
     setModalOpen(true);
   };
 
+  // Close modal and reset selected song
   const closeModal = () => {
     setModalOpen(false);
     setSelectedSong(null);
   };
 
+  // Close modal if update is successful
+  useEffect(() => {
+    if (status === "idle") {
+      closeModal();
+    }
+  }, [status]);
+
+  // Submit handler for updating the song
+  const onSubmit: SubmitHandler<FieldValues> = (data) => {
+    const { title, artist, album, genre } = data;
+    if (selectedSong?._id) {
+      dispatch(
+        updateSongRequest({
+          title,
+          artist,
+          album,
+          genre,
+          _id: selectedSong._id,
+        })
+      );
+    }
+    closeModal();
+  };
+
+  const handleDelete = (id: string) => {
+    // dispatch delete action here
+    dispatch(deleteSongRequest(id));
+    setDropdownOpen(null);
+  };
   return (
     <SongsContainer>
       {songs.map((song) => (
@@ -71,22 +117,30 @@ const Songs = () => {
               >
                 Edit
               </DropdownItem>
-              <DropdownItem>Delete</DropdownItem>
+              <DropdownItem
+                onClick={() => {
+                  handleDelete(song._id);
+                }}
+              >
+                Delete
+              </DropdownItem>
             </DropdownMenu>
           </OptionsButton>
         </SongItem>
       ))}
-      <Modal isOpen={isModalOpen} onClose={closeModal}>
-        <MusicForm
-          title="Edit Song"
-          handleSubmit={() => {}}
-          register={() => {}}
-          onSubmit={() => {}}
-          errors={{}}
-          formType="edit"
-          
-        />
-      </Modal>
+      {isModalOpen && (
+        <Modal isOpen={isModalOpen} onClose={closeModal}>
+          <MusicForm
+            title="Edit Song"
+            handleSubmit={handleSubmit}
+            register={register}
+            onSubmit={onSubmit}
+            errors={errors}
+            formType="edit"
+            defaultValues={selectedSong}
+          />
+        </Modal>
+      )}
     </SongsContainer>
   );
 };

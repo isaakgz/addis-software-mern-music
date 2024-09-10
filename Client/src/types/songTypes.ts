@@ -7,5 +7,5 @@ export interface SongPayload {
 
 export interface Song extends SongPayload {
   _id: string;
-  createdAt: string;
+  // createdAt: string;
 }

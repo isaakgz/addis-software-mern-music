@@ -31,3 +31,30 @@ export const addSong = async (songData: SongPayload) => {
     throw error;
   }
 };
+
+//update a song
+export const updateSong = async (songData: SongPayload, _id: string) => {
+  try {
+    const response = await api.put(`/songs/${_id}`, songData);
+    return response.data.data.updatedSong;
+  } catch (error) {
+    console.log("Error updating song:", error);
+    throw error;
+  }
+};
+
+//delete a song
+export const deleteSong = async (_id: string) => {
+  try {
+    const response = await api.delete(`/songs/${_id}`);
+
+    if (response.data.status === "success") {
+      return _id;
+    } else {
+      throw new Error("Failed to delete song");
+    }
+  } catch (error) {
+    console.log("Error deleting song:", error);
+    throw error;
+  }
+};

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Song, SongPayload } from "../../types/songTypes";
 
@@ -34,7 +35,7 @@ const songsSlice = createSlice({
       state.error = action.payload;
     },
     // Action to start adding a song
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
     addSongRequest(state, _action: PayloadAction<SongPayload>) {
       state.status = "loading";
       state.error = null;
@@ -46,6 +47,47 @@ const songsSlice = createSlice({
     },
     // Action to handle failed addition of a song
     addSongFailure(state, action: PayloadAction<string>) {
+      state.status = "failed";
+      state.error = action.payload;
+    },
+
+    //action to update a song
+    updateSongRequest(state, _action: PayloadAction<Song>) {
+      state.status = "loading";
+      state.error = null;
+    },
+    //action to handle successful update of a song
+    updateSongSuccess(state, action: PayloadAction<Song>) {
+      // Find the index of the song to be updated
+      const index = state.songs.findIndex(
+        (song) => song._id === action.payload._id
+      );
+
+      //check if the song is found and update it
+      if (index !== -1) {
+        state.songs[index] = action.payload;
+      }
+      state.status = "idle";
+
+    },
+    //action to handle failed update of a song
+    updateSongFailure(state, action: PayloadAction<string>) {
+      state.status = "failed";
+      state.error = action.payload;
+    },
+
+    //action to delete a song
+    deleteSongRequest(state, _action: PayloadAction<string>) {
+      state.status = "loading";
+      state.error = null;
+    },
+    //action to handle successful deletion of a song
+    deleteSongSuccess(state, action: PayloadAction<string>) {
+      state.songs = state.songs.filter((song) => song._id !== action.payload);
+      state.status = "idle";
+    },
+    //action to handle failed deletion of a song
+    deleteSongFailure(state, action: PayloadAction<string>) {
       state.status = "failed";
       state.error = action.payload;
     },
@@ -63,7 +105,13 @@ export const {
   addSongFailure,
   addSongRequest,
   addSongSuccess,
+  updateSongFailure,
+  updateSongRequest,
+  updateSongSuccess,
   clearError,
+  deleteSongFailure,
+  deleteSongRequest,
+  deleteSongSuccess,
 } = songsSlice.actions;
 
 export default songsSlice.reducer;
