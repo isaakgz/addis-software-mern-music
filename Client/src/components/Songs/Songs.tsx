@@ -1,19 +1,22 @@
 /** @jsxImportSource @emotion/react */
 import { useEffect, useState } from "react";
+import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { FaEllipsisV } from "react-icons/fa";
-import { useAppDispatch, useAppSelector } from "../../store";
+import { MdFavoriteBorder } from "react-icons/md";
 import {
   deleteSongRequest,
   fetchSongsRequest,
   updateSongRequest,
 } from "../../features/songs/songsSlice";
+import { useAppDispatch, useAppSelector } from "../../store";
+import { Song } from "../../types/songTypes";
 import Modal from "../Modal/Modal";
 import MusicForm from "../MuiscForm/MusicForm";
-import { Song } from "../../types/songTypes";
-import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import {
+  ButtonContainer,
   DropdownItem,
   DropdownMenu,
+  FavoriteButton,
   Icon,
   OptionsButton,
   SongDetails,
@@ -106,26 +109,32 @@ const Songs = () => {
               </SongMeta>
             </SongInfo>
           </SongDetails>
-          <OptionsButton onClick={() => toggleDropdown(song._id)}>
-            <FaEllipsisV />
-            <DropdownMenu show={dropdownOpen === song._id}>
-              <DropdownItem
-                onClick={() => {
-                  openEditModal(song);
-                  setDropdownOpen(null);
-                }}
-              >
-                Edit
-              </DropdownItem>
-              <DropdownItem
-                onClick={() => {
-                  handleDelete(song._id);
-                }}
-              >
-                Delete
-              </DropdownItem>
-            </DropdownMenu>
-          </OptionsButton>
+          <ButtonContainer>
+            <FavoriteButton isFav>
+              <MdFavoriteBorder />
+            </FavoriteButton>
+
+            <OptionsButton onClick={() => toggleDropdown(song._id)}>
+              <FaEllipsisV />
+              <DropdownMenu show={dropdownOpen === song._id}>
+                <DropdownItem
+                  onClick={() => {
+                    openEditModal(song);
+                    setDropdownOpen(null);
+                  }}
+                >
+                  Edit
+                </DropdownItem>
+                <DropdownItem
+                  onClick={() => {
+                    handleDelete(song._id);
+                  }}
+                >
+                  Delete
+                </DropdownItem>
+              </DropdownMenu>
+            </OptionsButton>
+          </ButtonContainer>
         </SongItem>
       ))}
       {isModalOpen && (

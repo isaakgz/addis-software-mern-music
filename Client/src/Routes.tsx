@@ -6,6 +6,9 @@ import HomePage from "./pages/HomePage/HomePage";
 import LoginForm from "./components/AuthForm/Login";
 import SignUpForm from "./components/AuthForm/SignUp";
 import PrivateRoute from "./components/privateRoute/PrivateRoute";
+import FavoritesPage from "./pages/Favorites/FavoritesPage";
+import PlaylistsPage from "./pages/PlaylistsPage/PlaylistsPage";
+import StatisticsPage from "./pages/StatisticsPage/StatisticsPage";
 
 const router = createBrowserRouter([
   {
@@ -40,15 +43,15 @@ const router = createBrowserRouter([
           },
           {
             path: "/favorites",
-            element: <div>fav</div>,
+            element: <FavoritesPage />,
           },
           {
             path: "/playlists",
-            element: <div>playlists</div>,
+            element: <PlaylistsPage />,
           },
           {
             path: "/statistics",
-            element: <div>statistics</div>,
+            element: <StatisticsPage />,
           },
         ],
       },

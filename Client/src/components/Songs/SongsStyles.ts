@@ -1,4 +1,3 @@
-
 import styled from "@emotion/styled";
 import { FaMusic } from "react-icons/fa";
 
@@ -12,6 +11,8 @@ export const Colors = {
   darkHoverBackground: "#444",
   lightText: "#666",
   lightHoverText: "#333",
+  cardBackground: "#444",
+  primaryDark: "#e65c50",
 };
 
 export const SongsContainer = styled.div`
@@ -95,6 +96,28 @@ export const SongMeta = styled.div`
 
   @media (max-width: 600px) {
     font-size: 12px;
+  }
+`;
+export const ButtonContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+`;
+
+export const FavoriteButton = styled.button<{ isFav?: boolean }>`
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: ${(props) => (props.isFav ? Colors.primary : Colors.lightText)};
+  position: relative;
+  &:hover {
+    color: ${Colors.primaryHover};
+  }
+
+  @media (max-width: 600px) {
+    align-self: flex-end;
   }
 `;
 
