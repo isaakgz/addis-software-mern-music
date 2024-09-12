@@ -29,7 +29,7 @@ const addFavorite = async (req, res, next) => {
 
     //send success response
     sendResponse(res, 200, "success", {
-      favorites: user.favorites,
+      newFavorite: song,
     });
   } catch (error) {
     // console.log(error)
@@ -64,7 +64,7 @@ const removeFavorite = async (req, res, next) => {
 
     //send success response
     sendResponse(res, 200, "success", {
-      favorites: user.favorites,
+      removedFavorite: song._id,
     });
   } catch (error) {
     //pass the error to the error handling middleware
@@ -212,7 +212,7 @@ const deletePlaylist = async (req, res, next) => {
     const user = req.user;
     const { playlistId } = req.params;
 
-    // Find the playlist and remove it 
+    // Find the playlist and remove it
 
     const playlist = user.playlists.id(playlistId);
     if (!playlist) {

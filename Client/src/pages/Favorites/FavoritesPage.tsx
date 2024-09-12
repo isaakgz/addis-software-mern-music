@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
 import { RiDeleteBinLine } from "react-icons/ri";
+import LoadingSpinner from "../../components/LoadingSpinner.tsx/LoadingSpinner";
 import {
   ButtonContainer,
   Colors,
@@ -12,60 +13,18 @@ import {
   SongsContainer,
   SongTitle,
 } from "../../components/Songs/SongsStyles";
+import { useAppDispatch, useAppSelector } from "../../store";
+import { removeFavoriteRequest } from "../../features/favorites/favoritesSlices";
 
 function FavoritesPage() {
-  const favSongs = [
-    {
-      _id: 1,
-      title: "Song 1",
-      artist: "Artist 1",
-      album: "Album 1",
-      year: 2021,
-      genre: "Pop",
-      duration: "3:00",
-      cover: "https://via.placeholder.com/150",
-    },
-    {
-      _id: 2,
-      title: "Song 2",
-      artist: "Artist 2",
-      album: "Album 2",
-      year: 2021,
-      genre: "Pop",
-      duration: "3:00",
-      cover: "https://via.placeholder.com/150",
-    },
-    {
-      _id: 3,
-      title: "Song 3",
-      artist: "Artist 3",
-      album: "Album 3",
-      year: 2021,
-      genre: "Pop",
-      duration: "3:00",
-      cover: "https://via.placeholder.com/150",
-    },
-    {
-      _id: 4,
-      title: "Song 3",
-      artist: "Artist 3",
-      album: "Album 3",
-      year: 2021,
-      genre: "Pop",
-      duration: "3:00",
-      cover: "https://via.placeholder.com/150",
-    },
-    {
-      _id: 5,
-      title: "Song 3",
-      artist: "Artist 3",
-      album: "Album 3",
-      year: 2021,
-      genre: "Pop",
-      duration: "3:00",
-      cover: "https://via.placeholder.com/150",
-    },
-  ];
+  const { favorites: favSongs, status } = useAppSelector(
+    (state) => state.favorites
+  );
+  const dispatch = useAppDispatch();
+
+  const handelRemoveFavorite = (id: string) => {
+    dispatch(removeFavoriteRequest(id));
+  };
 
   const Title = styled.h1`
     font-size: 24px;
@@ -73,7 +32,6 @@ function FavoritesPage() {
     color: ${Colors.text};
     margin-bottom: 20px;
     text-align: center;
-
   `;
 
   const FavContainer = styled.div`
@@ -92,30 +50,49 @@ function FavoritesPage() {
     overflow-x: hidden;
   `;
 
+  const NoItemsMessage = styled.p`
+    color: ${Colors.text};
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+  `;
+
   return (
     <>
       <Title>Favorites</Title>
       <FavContainer>
-        <SongsContainer>
-          {favSongs.map((song) => (
-            <SongItem key={song._id}>
-              <SongDetails>
-                <Icon />
-                <SongInfo>
-                  <SongTitle>{song.title}</SongTitle>
-                  <SongMeta>
-                    {song.artist} • {song.album} • {song.genre}
-                  </SongMeta>
-                </SongInfo>
-              </SongDetails>
-              <ButtonContainer>
-                <FavoriteButton>
-                  <RiDeleteBinLine />
-                </FavoriteButton>
-              </ButtonContainer>
-            </SongItem>
-          ))}
-        </SongsContainer>
+        {status === "loading" ? (
+          <LoadingSpinner />
+        ) : favSongs.length === 0 ? (
+          <NoItemsMessage>
+            No favorite songs found. Add some songs to your favorites.
+          </NoItemsMessage>
+        ) : (
+          <SongsContainer>
+            {favSongs.map((song) => (
+              <SongItem key={song._id}>
+                <SongDetails>
+                  <Icon />
+                  <SongInfo>
+                    <SongTitle>{song.title}</SongTitle>
+                    <SongMeta>
+                      {song.artist} • {song.album} • {song.genre}
+                    </SongMeta>
+                  </SongInfo>
+                </SongDetails>
+                <ButtonContainer>
+                  <FavoriteButton
+                    onClick={() => {
+                      handelRemoveFavorite(song._id);
+                    }}
+                  >
+                    <RiDeleteBinLine />
+                  </FavoriteButton>
+                </ButtonContainer>
+              </SongItem>
+            ))}
+          </SongsContainer>
+        )}
       </FavContainer>
     </>
   );

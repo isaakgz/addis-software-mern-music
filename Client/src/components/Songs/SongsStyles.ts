@@ -113,7 +113,7 @@ export const FavoriteButton = styled.button<{ isFav?: boolean }>`
   color: ${(props) => (props.isFav ? Colors.primary : Colors.lightText)};
   position: relative;
   &:hover {
-    color: ${Colors.primaryHover};
+    scale: 1.5;
   }
 
   @media (max-width: 600px) {
