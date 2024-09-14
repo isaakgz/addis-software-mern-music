@@ -6,6 +6,7 @@ import {
   deletePlaylist,
   getFavorites,
   getPlaylists,
+  getSongsInPlaylist,
   removeFavorite,
   removeSongFromPlaylist,
 } from "../controllers/userController.js";
@@ -44,6 +45,14 @@ router.delete(
   validateObjectId,
   protect,
   removeSongFromPlaylist
+);
+
+//route to get all songs in a playlist
+router.get(
+  "/playlists/:playlistId",
+  protect,
+  validateObjectId,
+  getSongsInPlaylist
 );
 
 //route to delete a playlist

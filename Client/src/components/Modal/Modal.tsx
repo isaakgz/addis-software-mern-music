@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 import React from "react";
 
 const ModalOverlay = styled.div`
-  position: fixed;
+  position: absolute; /* Changed from fixed to absolute */
   top: 0;
   left: 0;
   right: 0;
@@ -13,6 +13,7 @@ const ModalOverlay = styled.div`
   align-items: center;
   z-index: 1000;
 `;
+
 const ModalContent = styled.div`
   width: 100%;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -24,12 +25,13 @@ const ModalContent = styled.div`
   align-items: center;
   position: relative;
 `;
+
 const CloseButton = styled.button`
- position: absolute;
+  position: absolute;
   top: 15px;
   right: 12px;
   background: none;
-  border-radius:50%;
+  border-radius: 50%;
   background-color: #ff6f61;
   color: white;
   border: none;
@@ -41,9 +43,7 @@ const CloseButton = styled.button`
   &:hover {
     color: black;
     background-color: #f57f74;
-
   }
-
 `;
 
 interface ModalProps {
@@ -53,6 +53,8 @@ interface ModalProps {
 }
 
 function Modal({ children, isOpen, onClose }: ModalProps) {
+  
+
   if (!isOpen) {
     return null;
   }

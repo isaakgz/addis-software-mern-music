@@ -98,23 +98,28 @@ const getFavorites = async (req, res, next) => {
 const createPlaylist = async (req, res, next) => {
   try {
     const user = req.user;
-    const { name } = req.body;
+    const { playlistName } = req.body;
 
     //check the input name is not empty
-    if (!(name && name.trim())) {
+    if (!(playlistName && playlistName.trim())) {
       throw new AppError(400, "Playlist name cannot be empty");
+    }
+
+    //check if the playlist name already exists
+    if (user.playlists.some((playlist) => playlist.name === playlistName)) {
+      throw new AppError(400, "Playlist name already exists");
     }
 
     //create a new playlist
     user.playlists.push({
-      name,
+      name: playlistName,
       songs: [],
     });
     await user.save();
 
     //send success response
     sendResponse(res, 200, "success", {
-      playlists: user.playlists,
+      playlist: user.playlists[user.playlists.length - 1],
     });
   } catch (error) {
     //pass the error to the error handling middleware
@@ -153,7 +158,7 @@ const addSongToPlaylist = async (req, res, next) => {
 
     //send success response
     sendResponse(res, 200, "success", {
-      playlists: user.playlists,
+      playlists: user.playlists.id(playlistId),
     });
   } catch (error) {
     //pass the error to the error handling middleware
@@ -198,7 +203,36 @@ const removeSongFromPlaylist = async (req, res, next) => {
     );
     await user.save();
 
-    sendResponse(res, 200, "success", { playlists: user.playlists });
+    sendResponse(res, 200, "success", { playlist: playlist });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc get all songs in a playlist
+// @route GET /api/users/playlists/:playlistId
+// @access Private
+
+const getSongsInPlaylist = async (req, res, next) => {
+  try {
+    // Get the user and playlist id from the request
+    const user = req.user;
+    const { playlistId } = req.params;
+
+    // Find the playlist
+    const playlist = user.playlists.id(playlistId);
+    if (!playlist) {
+      throw new AppError(404, "Playlist not found");
+    }
+
+    // Populate the songs field in the playlist document with the song details
+    await user.populate({
+      path: `playlists.${user.playlists.indexOf(playlist)}.songs`,
+      model: "Song",
+    });
+    sendResponse(res, 200, "success", {
+      songs: playlist.songs,
+    });
   } catch (error) {
     next(error);
   }
@@ -223,7 +257,9 @@ const deletePlaylist = async (req, res, next) => {
     );
     await user.save();
 
-    sendResponse(res, 200, "success", { playlists: user.playlists });
+    sendResponse(res, 200, "success", {
+      deletedPlaylist: playlist._id,
+    });
   } catch (error) {
     next(error);
   }
@@ -238,4 +274,5 @@ export {
   deletePlaylist,
   getFavorites,
   getPlaylists,
+  getSongsInPlaylist,
 };

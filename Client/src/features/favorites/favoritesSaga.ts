@@ -26,7 +26,7 @@ function* fetchFavoritesSaga() {
     const response: Song[] = yield call(fetchFavorites);
     yield put(fetchFavoritesSuccess(response));
   } catch (error) {
-    handleSagaError(error, fetchFavoritesFailure);
+    yield handleSagaError(error, fetchFavoritesFailure);
   }
 }
 
@@ -37,7 +37,7 @@ function* addFavoriteSaga(action: PayloadAction<string>) {
     yield put(addFavoriteSuccess(response));
     toast.success("Song added to favorites");
   } catch (error) {
-    handleSagaError(error, addFavoriteFailure);
+    yield handleSagaError(error, addFavoriteFailure);
   }
 }
 
@@ -48,7 +48,7 @@ function* removeFavoriteSaga(action: ReturnType<typeof removeFavoriteRequest>) {
     yield put(removeFavoriteSuccess(response));
     toast.success("Song removed from favorites");
   } catch (error) {
-    handleSagaError(error, removeFavoriteFailure);
+    yield handleSagaError(error, removeFavoriteFailure);
   }
 }
 //watcher saga to watch for fetchFavoritesRequest action

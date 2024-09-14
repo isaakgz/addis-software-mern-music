@@ -20,6 +20,7 @@ function App() {
         <div
           css={css`
             flex: 1;
+            position: relative;
           `}
         >
           <Banner />

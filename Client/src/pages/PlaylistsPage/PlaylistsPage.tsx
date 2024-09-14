@@ -1,192 +1,137 @@
 /** @jsxImportSource @emotion/react */
-import styled from "@emotion/styled";
-import { useState } from "react";
-import { FaEllipsisV, FaPlay, FaTrash } from "react-icons/fa";
-import { Colors } from "../../components/Songs/SongsStyles";
+import { useEffect, useRef, useState } from "react";
+import { FaEllipsisV, FaPlay, FaTrash } from "react-icons/fa"; // Import icons
+import { IoIosAddCircle } from "react-icons/io"; // Import Add Icon
+import {
+  Button,
+  ErrorMessage,
+  Form,
+  FormTitle,
+  Input,
+} from "../../components/AuthForm/AuthFormStyles"; // Styled components for forms
+import Modal from "../../components/Modal/Modal"; // Modal component
+import {
+  addPlaylistRequest,
+  deletePlaylistRequest,
+  fetchPlaylistsRequest,
+} from "../../features/playlists/playlistsSlice"; // Redux action to add playlist
+import { useAppDispatch, useAppSelector } from "../../store"; // Redux hooks
+import {
+  Title,
+  CreatePlaylistButton,
+  PlaylistsContainer,
+  PlaylistCard,
+  PlaylistTitle,
+  CountText,
+  PlaylistActions,
+  OptionButton,
+  DropdownMenu,
+  DropdownItem,
+} from "./PlaylistsStyles"; // Styled components for Playlists
+import { FieldValues, useForm } from "react-hook-form"; // React-hook-form for form management
+import toast from "react-hot-toast"; // Notification system
+import { useNavigate } from "react-router-dom";
 
-// Styled components
-const Title = styled.h1`
-  color: ${Colors.text};
-  margin-bottom: 20px;
-  text-align: center;
-`;
-
-const PlaylistsContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 1rem;
-  padding: 1rem;
-  background-color: ${Colors.background};
-  margin: 1rem auto;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  width: 100%;
-  max-width: 60vw;
-  border: 1px solid ${Colors.border};
-  height: auto;
-  max-height: 55vh;
-  min-height: 50vh;
-  overflow-y: auto;
-  overflow-x: hidden;
-
-  @media (max-width: 768px) {
-    max-width: 100%;
-    padding: 0.5rem;
-  }
-`;
-
-const PlaylistCard = styled.div`
-  background-color: ${Colors.cardBackground};
-  padding: 0.75rem;
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  width: 100%;
-  max-width: 220px;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-
-  @media (max-width: 768px) {
-    max-width: 160px;
-  }
-`;
-
-const PlaylistTitle = styled.h2`
-  color: ${Colors.text};
-  margin-bottom: 10px;
-  font-size: 16px;
-
-  @media (max-width: 768px) {
-    font-size: 14px;
-  }
-`;
-
-const PlaylistActions = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  width: 100%;
-  margin-top: 1rem;
-  position: relative;
-`;
-
-const OptionButton = styled.button`
-  background-color: transparent;
-  border: none;
-  color: ${Colors.primary};
-  cursor: pointer;
-  font-size: 14px;
-
-  &:hover {
-    color: ${Colors.primaryDark};
-  }
-`;
-
-const DropdownMenu = styled.div<{ isVisible: boolean }>`
-  display: ${(props) => (props.isVisible ? "block" : "none")};
-  position: absolute;
-  right: 0;
-  top: 100%;
-  background-color: ${Colors.darkBackground};
-  border-radius: 5px;
-  padding: 5px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
-`;
-
-const DropdownItem = styled.div`
-  padding: 8px 12px;
-  cursor: pointer;
-  color: ${Colors.text};
-  transition: background-color 0.3s ease;
-
-  &:hover {
-    background-color: ${Colors.darkHoverBackground};
-  }
-`;
-
-const CountText = styled.p`
-  color: ${Colors.text};
-  font-size: 14px;
-  margin-top: 0.5rem;
-`;
-
-// Playlist data
-const playlists = [
-  {
-    _id: 1,
-    name: "Playlist 1",
-  },
-  {
-    _id: 2,
-    name: "Playlist 2",
-  },
-  {
-    _id: 3,
-    name: "Playlist 3",
-  },
-  {
-    _id: 4,
-    name: "Playlist 4",
-  },
-  {
-    _id: 5,
-    name: "Playlist 5",
-  },
-  {
-    _id: 6,
-    name: "Playlist 5",
-  },
-  {
-    _id: 7,
-    name: "Playlist 5",
-  },
-  {
-    _id: 8,
-    name: "Playlist 5",
-  },
-  {
-    _id: 9,
-    name: "Playlist 5",
-  },
-];
-
-// Component Definition
+// Component Definition: PlaylistsPage
 function PlaylistsPage() {
-  const [dropdownVisible, setDropdownVisible] = useState<number | null>(null);
+  // Component state
+  const [dropDownOpen, setDropdownOpen] = useState<string | null>(null); // Controls visibility of dropdown for each playlist
+  // Controls visibility of dropdown for each playlist
+  const [isModalOpen, setModalOpen] = useState(false); // Controls modal visibility
 
-  const handleOpen = (id: number) => {
-    // Logic to open playlist
-    console.log(id)
+  // React hook form setup
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm();
+
+  // Redux hooks
+  const dispatch = useAppDispatch();
+  const { playlists, error, status } = useAppSelector(
+    (state) => state.playlists
+  ); // Get playlists state from Redux
+
+  // Refs to track previous values for status and playlists length
+  const previousStatus = useRef(status);
+  const previousPlaylistsLength = useRef(playlists.length);
+
+  // useEffect to fetch playlists on component mount
+  useEffect(() => {
+    dispatch(fetchPlaylistsRequest()); // Dispatch request to fetch playlists
+  }, [dispatch]);
+  const navigate = useNavigate();
+
+  // useEffect to handle side effects when status or playlists change
+  useEffect(() => {
+    if (error) {
+      toast.dismiss(); // Dismiss any existing toasts
+      toast.error(error); // Show error message if there's an error
+    } else if (
+      status === "idle" &&
+      playlists.length > previousPlaylistsLength.current
+    ) {
+      toast.dismiss(); // Dismiss any existing toasts
+      toast.success("Playlist created successfully"); // Show success toast if playlist created
+      previousPlaylistsLength.current = playlists.length; // Update playlist length reference
+      closeAddModal(); // Close modal
+      reset(); // Reset form
+    } else if (status === "loading" && previousStatus.current === "loading") {
+      toast.loading("Creating playlist..."); // Show loading message when creating a playlist
+    }
+  }, [dispatch, error, status, playlists.length, reset]);
+
+  // Event handler to toggle the dropdown visibility for playlist actions
+  const toggleDropdown = (id: string) => {
+    setDropdownOpen((prev) => (prev === id ? null : id));
   };
 
-  const handleDelete = (id: number) => {
-    // Logic to delete playlist
-    console.log(id)
+  // Event handler to handle opening a playlist (not yet implemented)
+  const handleOpen = (id: string) => {
+    navigate(`/playlists/${id}`); // Placeholder logic for opening a playlist
   };
 
-  const toggleDropdown = (id: number) => {
-    setDropdownVisible(dropdownVisible === id ? null : id);
+  // Event handler to handle adding a playlist (dispatched to redux)
+  const handleAddPlaylist = (data: FieldValues) => {
+    dispatch(addPlaylistRequest(data.playlistName)); // Dispatch the request to add a playlist
+  };
+
+  // Modal open/close handlers
+  const openAddModal = () => setModalOpen(true);
+  const closeAddModal = () => setModalOpen(false);
+
+  // Event handler to delete a playlist (not yet implemented)
+  const handleDelete = (id: string) => {
+    dispatch(deletePlaylistRequest(id)); // Dispatch the request to delete a playlist
   };
 
   return (
     <>
-      <Title>Playlists</Title>
-      <PlaylistsContainer>
+      <Title>Playlists</Title> {/* Page title */}
+      <CreatePlaylistButton onClick={openAddModal}>
+        <IoIosAddCircle
+          style={{
+            fontSize: "1.5rem",
+            marginRight: "0.5rem",
+            verticalAlign: "middle",
+          }}
+        />
+        Create Playlist
+      </CreatePlaylistButton>
+      {/* Playlist List */}
+      <PlaylistsContainer >
         {playlists.map((playlist) => (
           <PlaylistCard key={playlist._id}>
-            <PlaylistTitle>{playlist.name}</PlaylistTitle>
-            <CountText>
-              10 songs
-            </CountText>
-              
+            <PlaylistTitle>{playlist.name}</PlaylistTitle> {/* Playlist name */}
+            <CountText>{playlist.songs.length} songs</CountText>{" "}
+            {/* Song count */}
+            {/* Playlist actions (dropdown for more options) */}
             <PlaylistActions>
               <OptionButton onClick={() => toggleDropdown(playlist._id)}>
                 <FaEllipsisV />
               </OptionButton>
-              <DropdownMenu isVisible={dropdownVisible === playlist._id}>
+              <DropdownMenu isVisible={dropDownOpen === playlist._id}>
                 <DropdownItem onClick={() => handleOpen(playlist._id)}>
                   <FaPlay /> Open
                 </DropdownItem>
@@ -198,6 +143,43 @@ function PlaylistsPage() {
           </PlaylistCard>
         ))}
       </PlaylistsContainer>
+      {/* Add Playlist Modal */}
+      {isModalOpen && (
+        <Modal isOpen={isModalOpen} onClose={closeAddModal}>
+          <Form
+            onSubmit={handleSubmit((data) => handleAddPlaylist(data))}
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              width: "100%",
+              gap: "1rem",
+            }}
+          >
+            <FormTitle>Create Playlist</FormTitle>
+            <Input
+              {...register("playlistName", {
+                required: "Playlist name is required",
+                minLength: {
+                  value: 3,
+                  message: "Playlist name must be at least 3 characters",
+                },
+                maxLength: {
+                  value: 10,
+                  message: "Playlist name must be at most 10 characters",
+                },
+              })}
+              type="text"
+              placeholder="Playlist Name"
+            />
+            {errors?.playlistName && (
+              <ErrorMessage>{String(errors.playlistName.message)}</ErrorMessage>
+            )}
+            <Button type="submit">Create Playlist</Button>
+          </Form>
+        </Modal>
+      )}
     </>
   );
 }

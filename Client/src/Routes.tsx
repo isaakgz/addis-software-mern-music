@@ -9,6 +9,7 @@ import PrivateRoute from "./components/privateRoute/PrivateRoute";
 import FavoritesPage from "./pages/Favorites/FavoritesPage";
 import PlaylistsPage from "./pages/PlaylistsPage/PlaylistsPage";
 import StatisticsPage from "./pages/StatisticsPage/StatisticsPage";
+import PlaylistDetailPage from "./pages/PlaylistDetailPage/PlaylistDetailPage";
 
 const router = createBrowserRouter([
   {
@@ -48,6 +49,10 @@ const router = createBrowserRouter([
           {
             path: "/playlists",
             element: <PlaylistsPage />,
+          },
+          {
+            path: "/playlists/:id",
+            element: <PlaylistDetailPage />,
           },
           {
             path: "/statistics",

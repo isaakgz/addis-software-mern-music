@@ -28,9 +28,12 @@ import {
   SongInfo,
   SongItem,
   SongMeta,
-  SongTitle,
   SongsContainer,
+  SongTitle,
+  SubMenu,
+  SubMenuItem,
 } from "./SongsStyles";
+import { addSongToPlaylistRequest } from "../../features/playlists/playlistsSlice";
 
 // Component Definition
 const Songs = () => {
@@ -38,12 +41,14 @@ const Songs = () => {
   const { songs, status } = useAppSelector((state) => state.songs);
   const dispatch = useAppDispatch();
   const { favorites } = useAppSelector((state) => state.favorites);
+  const { playlists } = useAppSelector((state) => state.playlists);
 
   // Local state management for dropdown and modal
   const [dropdownOpen, setDropdownOpen] = useState<string | null>(null);
   const [isModalOpen, setModalOpen] = useState(false);
   const [selectedSong, setSelectedSong] = useState<Song | null>(null);
   const [localFavorites, setLocalFavorites] = useState<string[]>([]);
+  const [isSubMenuOpen, setSubMenuOpen] = useState(false);
 
   // Form hook for handling song updates
   const {
@@ -122,6 +127,11 @@ const Songs = () => {
     }
   };
 
+  const handleAddToPlaylist = (playlistId: string, songId: string) => {
+    // dispatch add to playlist action here
+    dispatch(addSongToPlaylistRequest({ playlistId, songId }));
+  };
+
   return (
     <SongsContainer>
       {songs.map((song) => {
@@ -149,7 +159,13 @@ const Songs = () => {
 
               <OptionsButton onClick={() => toggleDropdown(song._id)}>
                 <FaEllipsisV />
-                <DropdownMenu show={dropdownOpen === song._id}>
+                <DropdownMenu
+                  show={dropdownOpen === song._id}
+                  onMouseLeave={() => {
+                    setDropdownOpen(null);
+                    setSubMenuOpen(false);
+                  }}
+                >
                   <DropdownItem
                     onClick={() => {
                       openEditModal(song);
@@ -165,6 +181,29 @@ const Songs = () => {
                   >
                     Delete
                   </DropdownItem>
+                  <DropdownItem
+                    onMouseEnter={() => {
+                      setSubMenuOpen(true);
+                    }}
+                  >
+                    Add to Playlist
+                  </DropdownItem>
+                  {isSubMenuOpen && (
+                    <SubMenu>
+                      {playlists.map((playlist) => (
+                        <SubMenuItem
+                          key={playlist._id}
+                          onClick={() => {
+                            handleAddToPlaylist(playlist._id, song._id);
+                            setSubMenuOpen(false);
+                            setDropdownOpen(null);
+                          }}
+                        >
+                          {playlist.name}
+                        </SubMenuItem>
+                      ))}
+                    </SubMenu>
+                  )}
                 </DropdownMenu>
               </OptionsButton>
             </ButtonContainer>

@@ -152,11 +152,42 @@ export const DropdownMenu = styled.div<{ show: boolean }>`
 
 export const DropdownItem = styled.div`
   padding: 8px 12px;
+  font-size: 12px;
   cursor: pointer;
   color: ${Colors.text};
   transition: background-color 0.3s ease;
 
   &:hover {
-    background-color: ${Colors.darkHoverBackground};
+    background-color: ${Colors.primaryHover};
+  }
+`;
+
+export const SubMenu = styled.div`
+  position: absolute;
+  right: 100%;
+  display: flex;
+  flex-direction: column;
+  width: 100px;
+  background-color: ${Colors.darkBackground};
+  top: 60%;
+  border-radius: 5px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  height: auto;
+  overflow: auto;
+`;
+
+export const SubMenuItem = styled.div`
+  font-size: 12px;
+  cursor: pointer;
+  color: ${Colors.text};
+  padding: 5px;
+  transition: background-color 0.3s ease;
+  border-radius: 5px;
+
+  &:hover {
+    background-color: ${Colors.primaryHover};
   }
 `;
