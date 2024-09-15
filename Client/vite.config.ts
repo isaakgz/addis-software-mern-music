@@ -11,6 +11,11 @@ export default defineConfig({
         changeOrigin: true, // Changes the origin of the host header to the target URL
         secure: false, // Disables SSL certificate verification
       },
+      "/search" : {
+        target : "https://api.deezer.com",
+        changeOrigin : true,
+        secure : false
+      }
     },
   },
 });

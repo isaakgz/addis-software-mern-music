@@ -9,9 +9,10 @@ function AddMusicPage() {
   const {
     register,
     handleSubmit,
-
+    setValue,
     formState: { errors },
   } = useForm();
+
   const { error, songs, status } = useAppSelector((state) => state.songs);
   const dispatch = useAppDispatch();
   const previousSongsLength = useRef(songs.length);
@@ -51,6 +52,7 @@ function AddMusicPage() {
       errors={errors}
       formType="add"
       isLoading={status === "loading"}
+      setValue={setValue}
     />
   );
 }
