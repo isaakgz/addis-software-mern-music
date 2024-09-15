@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { useEffect, useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
-import { FaEllipsisV } from "react-icons/fa";
+import { FaEllipsisV, FaPlay } from "react-icons/fa";
 import { MdFavoriteBorder } from "react-icons/md";
 import {
   addFavoriteRequest,
@@ -24,6 +24,7 @@ import {
   FavoriteButton,
   Icon,
   OptionsButton,
+  PlayButton,
   SongDetails,
   SongInfo,
   SongItem,
@@ -34,6 +35,7 @@ import {
   SubMenuItem,
 } from "./SongsStyles";
 import { addSongToPlaylistRequest } from "../../features/playlists/playlistsSlice";
+import MusicPlayer from "../MusicPlayer/MusicPlayer";
 
 // Component Definition
 const Songs = () => {
@@ -57,6 +59,12 @@ const Songs = () => {
     formState: { errors },
   } = useForm();
 
+  const [playerData, setPlayerData] = useState({
+    url: "https://cdn-preview-8.dzcdn.net/stream/c-8ffd078d7efe834321a9ec2c1954efdf-1.mp3",
+    isPlaying: false,
+    title: "sois pas jaloux",
+    artist: "Maître Gims",
+  });
   // Fetch songs on component mount
   useEffect(() => {
     dispatch(fetchSongsRequest());
@@ -94,7 +102,7 @@ const Songs = () => {
 
   // Submit handler for updating the song
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
-    const { title, artist, album, genre } = data;
+    const { title, artist, album, genre, songUrl } = data;
     if (selectedSong?._id) {
       dispatch(
         updateSongRequest({
@@ -103,6 +111,7 @@ const Songs = () => {
           album,
           genre,
           _id: selectedSong._id,
+          songUrl: songUrl,
         })
       );
     }
@@ -132,6 +141,20 @@ const Songs = () => {
     dispatch(addSongToPlaylistRequest({ playlistId, songId }));
   };
 
+  const handleSongClick = (song: Song) => {
+    if (playerData.url === song.songUrl) {
+      setPlayerData((prev) => ({ ...prev, isPlaying: !prev.isPlaying }));
+    } else {
+      setPlayerData({
+        url: song.songUrl,
+        isPlaying: true,
+        title: song.title,
+        artist: song.artist,
+      });
+    }
+  };
+
+  console.log(playerData);
   return (
     <SongsContainer>
       {songs.map((song) => {
@@ -141,13 +164,22 @@ const Songs = () => {
             <SongDetails>
               <Icon />
               <SongInfo>
-                <SongTitle>{song.title}</SongTitle>
+                <SongTitle>{song.title.toLocaleLowerCase()}</SongTitle>
                 <SongMeta>
-                  {song.artist} • {song.album} • {song.genre}
+                  {song.artist.toLocaleLowerCase()} •{" "}
+                  {song.album.toLocaleLowerCase()} • {song.genre}
                 </SongMeta>
               </SongInfo>
             </SongDetails>
             <ButtonContainer>
+              <PlayButton
+                onClick={() => {
+                  handleSongClick(song);
+                }}
+                isPlaying={playerData.url === song.songUrl}
+              >
+                <FaPlay />
+              </PlayButton>
               <FavoriteButton
                 onClick={() => {
                   handleFav(song._id);
@@ -156,9 +188,9 @@ const Songs = () => {
               >
                 <MdFavoriteBorder />
               </FavoriteButton>
-
               <OptionsButton onClick={() => toggleDropdown(song._id)}>
                 <FaEllipsisV />
+
                 <DropdownMenu
                   show={dropdownOpen === song._id}
                   onMouseLeave={() => {
@@ -223,8 +255,8 @@ const Songs = () => {
           />
         </Modal>
       )}
+      <MusicPlayer playerData={playerData} />
     </SongsContainer>
   );
 };
-
 export default Songs;

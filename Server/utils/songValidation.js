@@ -9,6 +9,7 @@ const songSchema = Joi.object({
   genre: Joi.string().min(2).required(),
   album: Joi.string().min(2).required(),
   albumImageUrl: Joi.string().min(3).optional(),
+  songUrl: Joi.string().min(3).optional(),
 });
 
 const updateSongSchema = Joi.object({
@@ -17,6 +18,7 @@ const updateSongSchema = Joi.object({
   genre: Joi.string().min(2).optional(),
   album: Joi.string().min(2).optional(),
   albumImageUrl: Joi.string().min(3).optional(),
+  songUrl: Joi.string().min(3).optional(),
 });
 
 // Function to validate the song data

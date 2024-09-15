@@ -16,7 +16,11 @@ import {
   Input,
 } from "../AuthForm/AuthFormStyles";
 
-import { InputWrapper, SuggestionItem, SuggestionsContainer } from "./MusicFormStyles";
+import {
+  InputWrapper,
+  SuggestionItem,
+  SuggestionsContainer,
+} from "./MusicFormStyles";
 
 interface MusicFormProps {
   title: string;
@@ -65,6 +69,7 @@ function MusicForm({
       setValue("artist", song.artist.name);
       setValue("album", song.album.title);
       setValue("genre", "pop");
+      setValue("songUrl", song.preview);
     }
   };
 
@@ -88,8 +93,8 @@ function MusicForm({
                 message: "song title must be at least 2 characters",
               },
               maxLength: {
-                value: 20,
-                message: "song title must be at most 10 characters",
+                value: 30,
+                message: "song title must be at most 30 characters",
               },
             })}
             onChange={(e) => setQuery(e.target.value)}
@@ -128,8 +133,8 @@ function MusicForm({
               message: "artist must be at least 3 characters",
             },
             maxLength: {
-              value: 20,
-              message: "artist must be at most 20 characters",
+              value: 30,
+              message: "artist must be at most 30 characters",
             },
           })}
         />
@@ -148,8 +153,8 @@ function MusicForm({
               message: "album must be at least 2 characters",
             },
             maxLength: {
-              value: 20,
-              message: "album must be at most 20 characters",
+              value: 30,
+              message: "album must be at most 30 characters",
             },
           })}
         />
@@ -168,14 +173,15 @@ function MusicForm({
               message: "genre must be at least 2 characters",
             },
             maxLength: {
-              value: 20,
-              message: "genre must be at most 20 characters",
+              value: 30,
+              message: "genre must be at most 30 characters",
             },
           })}
         />
         {errors?.genre && (
           <ErrorMessage>{String(errors.genre.message)}</ErrorMessage>
         )}
+        <Input style={{ display: "none" }} {...register("songUrl")} />
 
         <Button type="submit" disabled={isLoading}>
           {formType === "add" ? "Add Music" : "Update Music"}

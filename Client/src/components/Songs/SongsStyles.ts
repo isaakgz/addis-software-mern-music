@@ -15,13 +15,15 @@ export const Colors = {
   primaryDark: "#e65c50",
 };
 
+// SongsStyles.ts
 export const SongsContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
-  padding: 2rem;
+
   padding-top: 0;
+  padding-bottom: 60px; // Make space for the fixed MusicPlayer
   overflow-y: auto;
   background-color: ${Colors.background};
   color: ${Colors.text};
@@ -43,6 +45,7 @@ export const SongItem = styled.div`
   background-color: ${Colors.darkBackground};
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
   transition: background-color 0.3s ease;
+  cursor: pointer;
 
   &:hover {
     background-color: ${Colors.darkHoverBackground};
@@ -114,6 +117,23 @@ export const FavoriteButton = styled.button<{ isFav?: boolean }>`
   position: relative;
   &:hover {
     scale: 1.5;
+  }
+
+  @media (max-width: 600px) {
+    align-self: flex-end;
+  }
+`;
+
+export const PlayButton = styled.button<{ isPlaying: boolean }>`
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: ${(props) => (props.isPlaying ? Colors.primary : Colors.lightText)};
+  position: relative;
+
+  &:hover {
+    color: ${Colors.lightHoverText};
   }
 
   @media (max-width: 600px) {

@@ -135,7 +135,7 @@ const addSong = async (req, res, next) => {
 const updateSong = async (req, res, next) => {
   try {
     const { id: songId } = req.params;
-    const { title, artist, genre, album, albumImageUrl } = req.body;
+    const { title, artist, genre, album, albumImageUrl, songUrl } = req.body;
 
     //check if the song exists with the id
     const song = await isSongExists(songId);
@@ -156,6 +156,7 @@ const updateSong = async (req, res, next) => {
       genre: genre || song.genre,
       album: album || song.album,
       albumImageUrl: album || song.album,
+      songUrl: songUrl || song.songUrl,
     });
     const updatedSong = await song.save();
     sendResponse(res, 200, "success", {
@@ -166,7 +167,7 @@ const updateSong = async (req, res, next) => {
   }
 };
 
-// @desc    Delete a song 
+// @desc    Delete a song
 // @route    DELETE api/songs/:id
 // @access   Private
 
@@ -202,4 +203,3 @@ export {
   updateSong,
   deleteSong,
 };
-

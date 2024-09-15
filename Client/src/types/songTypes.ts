@@ -3,6 +3,7 @@ export interface SongPayload {
   artist: string;
   album: string;
   genre: string;
+  songUrl: string;
 }
 
 export interface Song extends SongPayload {
@@ -18,4 +19,5 @@ export interface DeezerSong {
   artist: {
     name: string;
   };
+  preview: string;
 }

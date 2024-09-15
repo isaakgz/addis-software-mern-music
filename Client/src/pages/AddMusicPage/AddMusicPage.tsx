@@ -21,8 +21,8 @@ function AddMusicPage() {
 
   // Handle form submission
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
-    const { title, artist, album, genre } = data;
-    dispatch(addSongRequest({ title, artist, album, genre }));
+    const { title, artist, album, genre, songUrl } = data;
+    dispatch(addSongRequest({ title, artist, album, genre, songUrl }));
   };
 
   // Show toast messages

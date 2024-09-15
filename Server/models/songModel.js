@@ -22,6 +22,10 @@ const songSchema = new mongoose.Schema({
     type: String,
     required: false, // Not all songs have an album image
   },
+  songUrl: {
+    type: String,
+    required: false, // Not all songs have a song URL
+  },
   createdAt: {
     type: Date,
     default: Date.now,
