@@ -17,14 +17,15 @@ export const PlaylistsContainer = styled.div`
   padding: 1rem;
   background-color: ${Colors.background};
   margin: 1rem auto;
+  margin-top: 0;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  width: 100%;
+ 
   max-width: 60vw;
   border: 1px solid ${Colors.border};
   height: auto;
-  max-height: 55vh;
-  min-height: 50vh;
+  max-height: 40vh;
+  min-height: 40vh;
   overflow-y: auto;
   overflow-x: hidden;
 

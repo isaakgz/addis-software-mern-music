@@ -121,6 +121,7 @@ function PlaylistsPage() {
       </CreatePlaylistButton>
       {/* Playlist List */}
       <PlaylistsContainer >
+        {playlists.length === 0 && <Title>No playlists found</Title>}
         {playlists.map((playlist) => (
           <PlaylistCard key={playlist._id}>
             <PlaylistTitle>{playlist.name}</PlaylistTitle> {/* Playlist name */}

@@ -1,4 +1,3 @@
-import styled from "@emotion/styled";
 import { useEffect, useState } from "react";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { useNavigate, useParams } from "react-router-dom";
@@ -7,12 +6,11 @@ import {
   InfoText,
   Name,
 } from "../../components/InfoCard/InfoCardstyles";
-import LoadingSpinner from "../../components/LoadingSpinner.tsx/LoadingSpinner";
 import {
   ButtonContainer,
-  Colors,
   FavoriteButton,
   Icon,
+  PlayButton,
   SongDetails,
   SongInfo,
   SongItem,
@@ -20,68 +18,24 @@ import {
   SongsContainer,
   SongTitle,
 } from "../../components/Songs/SongsStyles";
+import { removeSongFromPlaylistRequest } from "../../features/playlists/playlistsSlice";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { Song } from "../../types/songTypes";
-import { removeSongFromPlaylistRequest } from "../../features/playlists/playlistsSlice";
-
-const FavContainer = styled.div`
-  padding: 1rem;
-  background-color: ${Colors.background};
-  margin: 1rem auto;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  width: 100%;
-  max-width: 800px;
-  border: 1px solid ${Colors.border};
-  height: auto;
-  max-height: 65vh;
-  min-height: 50vh;
-  overflow-y: auto;
-  overflow-x: hidden;
-`;
-
-const NoItemsMessage = styled.p`
-  color: ${Colors.text};
-  text-align: center;
-  font-size: 18px;
-  font-weight: bold;
-`;
-
-const PlaylistDescription = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 1rem;
-  justify-content: space-between;
-  margin: 1rem auto;
-  border-radius: 5px;
-  background-color: ${Colors.darkBackground};
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-  width: 80%;
-
-  transition: background-color 0.3s ease;
-`;
-
-const Button = styled.button`
-  background-color: ${Colors.primary};
-  color: ${Colors.text};
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-  font-weight: bold;
-  transition: background-color 0.3s ease;
-
-  &:hover {
-    background-color: ${Colors.primaryDark};
-  }
-`;
+import { FavContainer, NoItemsMessage } from "../Favorites/FavoritePageStyle";
+import { Button, PlaylistDescription } from "./PlaylistDetailStyles";
+import MusicPlayer from "../../components/MusicPlayer/MusicPlayer";
+import { FaPlay } from "react-icons/fa";
 
 function PlaylistDetailPage() {
   const navigate = useNavigate();
   const [playlistSongs, setPlaylistSongs] = useState<Song[]>([]);
   const { id: playlistId } = useParams();
+  const [playerData, setPlayerData] = useState({
+    url: "https://cdn-preview-8.dzcdn.net/stream/c-8ffd078d7efe834321a9ec2c1954efdf-1.mp3",
+    isPlaying: false,
+    title: "sois pas jaloux",
+    artist: "Maître Gims",
+  });
 
   const { playlists } = useAppSelector((state) => state.playlists);
   const { songs } = useAppSelector((state) => state.songs);
@@ -95,7 +49,6 @@ function PlaylistDetailPage() {
       );
     }
   };
-  
 
   useEffect(() => {
     const playlist = playlists.find((playlist) => playlist._id === playlistId);
@@ -110,6 +63,19 @@ function PlaylistDetailPage() {
     // }
   }, [playlists, playlistId, songs, dispatch]);
 
+  const handleSongClick = (song: Song) => {
+    if (playerData.url === song.songUrl) {
+      setPlayerData((prev) => ({ ...prev, isPlaying: !prev.isPlaying }));
+    } else {
+      setPlayerData({
+        url: song.songUrl,
+        isPlaying: true,
+        title: song.title,
+        artist: song.artist,
+      });
+    }
+  };
+
   return (
     <>
       <Button
@@ -120,21 +86,22 @@ function PlaylistDetailPage() {
         Back to Playlists
       </Button>
 
-      <FavContainer>
-        {status === "loading" ? (
-          <LoadingSpinner />
-        ) : playlistSongs.length === 0 ? (
-          <NoItemsMessage>
-            No favorite songs found. Add some songs to your favorites.
-          </NoItemsMessage>
-        ) : (
+      <FavContainer
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        {playlistSongs.length > 0 ? (
           <SongsContainer>
             <PlaylistDescription>
               <InfoText>
                 <Name>Playlist Name</Name>
                 <Count>{playlistSongs.length} songs</Count>
               </InfoText>
-              <Button>Add to Playlist</Button>
+              <Button onClick={() => navigate("/")}> Add to Playlist</Button>
             </PlaylistDescription>
             {playlistSongs.map((song) => (
               <SongItem key={song._id}>
@@ -148,6 +115,14 @@ function PlaylistDetailPage() {
                   </SongInfo>
                 </SongDetails>
                 <ButtonContainer>
+                  <PlayButton
+                    onClick={() => {
+                      handleSongClick(song);
+                    }}
+                    isPlaying={playerData.url === song.songUrl}
+                  >
+                    <FaPlay />
+                  </PlayButton>
                   <FavoriteButton
                     onClick={() => {
                       handelRemoveSong(song._id);
@@ -159,7 +134,10 @@ function PlaylistDetailPage() {
               </SongItem>
             ))}
           </SongsContainer>
+        ) : (
+          <NoItemsMessage>No songs in this playlist</NoItemsMessage>
         )}
+        <MusicPlayer playerData={playerData} />
       </FavContainer>
     </>
   );

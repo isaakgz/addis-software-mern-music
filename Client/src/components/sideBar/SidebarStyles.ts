@@ -18,6 +18,7 @@ export const SidebarContainer = styled.div<{ open: boolean }>`
   position: relative;
   transition: width 0.3s;
   border-right: 8px solid rgb(235, 235, 235);
+
   @media (max-width: 768px) {
     width: ${(props) => (props.open ? "12rem" : "3rem")};
   }
@@ -61,6 +62,7 @@ export const MenuItem = styled.li<{ gap: boolean; active: boolean }>`
   align-items: center;
   justify-content: flex-start;
   padding: 0.5rem;
+  padding-right: 0;
   border-radius: 0.375rem;
   cursor: pointer;
   color: #d1d5db;
@@ -73,16 +75,30 @@ export const MenuItem = styled.li<{ gap: boolean; active: boolean }>`
   &:hover {
     background-color: rgba(255, 255, 255, 0.1);
   }
+  @media (max-width: 768px) {
+    font-size: 1rem;
+  }
 `;
 
-export const MenuIcon = styled.img`
+export const MenuIcon = styled.div`
   width: 1.5rem;
   height: 1.5rem;
-  fill: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  @media (max-width: 768px) {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
 `;
 
 export const MenuTitle = styled.span<{ open: boolean }>`
-  transition: transform 0.2s;
+  overflow: hidden;
+  white-space: nowrap;
+  transition: transform 0.3s ease;
   transform-origin: left;
-  transform: ${(props) => (!props.open ? "scale(0)" : "none")};
+  width: ${(props) => (props.open ? "auto" : "0")};
+  opacity: ${(props) => (props.open ? 1 : 0)};
+  display: inline-block;
 `;

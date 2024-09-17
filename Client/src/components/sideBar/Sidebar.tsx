@@ -12,26 +12,29 @@ import {
 } from "./SidebarStyles.ts";
 import rightArrow from "../../assets/icons/control.png";
 import smiley from "../../assets/icons/smiley.svg";
-import home from "../../assets/icons/home.svg";
-import addMuisc from "../../assets/icons/addMuisc.svg";
-import playlists from "../../assets/icons/playlists.svg";
-import favs from "../../assets/icons/favs.svg";
-import stats from "../../assets/icons/stat.svg";
-import logoutIcon from "../../assets/icons/logout.svg"; // renamed to avoid conflict
-import person from "../../assets/icons/person.svg";
+
+import {
+  FaHome,
+  FaMusic,
+  FaHeart,
+  FaListUl,
+  FaChartBar,
+  FaSignOutAlt,
+  FaUser,
+} from "react-icons/fa";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { css } from "@emotion/react";
 import { useAppDispatch, useAppSelector } from "../../store/index.ts";
 import { logoutRequest } from "../../features/auth/authSlice.ts";
 
 const MENUS = [
-  { title: "Home", src: home, gap: false, path: "/" },
-  { title: "Add Music", src: addMuisc, gap: false, path: "/add-music" },
-  { title: "My Favorites", src: favs, gap: true, path: "/favorites" },
-  { title: "PlayLists", src: playlists, gap: false, path: "/playlists" },
-  { title: "Statistics", src: stats, gap: false, path: "/statistics" },
-  { title: "Isaak", src: person, gap: true, path: "/profile" },
-  { title: "Logout", src: logoutIcon, gap: false, action: "logout" }, // no path, it will trigger action
+  { title: "Home", icon: FaHome, gap: false, path: "/" },
+  { title: "Add Music", icon: FaMusic, gap: false, path: "/add-music" },
+  { title: "My Favorites", icon: FaHeart, gap: true, path: "/favorites" },
+  { title: "PlayLists", icon: FaListUl, gap: false, path: "/playlists" },
+  { title: "Statistics", icon: FaChartBar, gap: false, path: "/statistics" },
+  { title: "Isaak", icon: FaUser, gap: true, path: "/profile" },
+  { title: "Logout", icon: FaSignOutAlt, gap: false, action: "logout" },
 ];
 
 const Sidebar = () => {
@@ -82,7 +85,7 @@ const Sidebar = () => {
                     cursor: pointer;
                   `}
                 >
-                  <MenuIcon src={menu.src} alt={`${menu.title} icon`} />
+                  <MenuIcon as={menu.icon} />
                   <MenuTitle open={open}>{menu.title}</MenuTitle>
                 </MenuItem>
               );
@@ -97,7 +100,7 @@ const Sidebar = () => {
                 `}
               >
                 <MenuItem gap={menu.gap} active={isActive}>
-                  <MenuIcon src={menu.src} alt={`${menu.title} icon`} />
+                  <MenuIcon as={menu.icon} />
                   <MenuTitle open={open}>
                     {menu.path === "/profile" ? user?.username : menu.title}
                   </MenuTitle>

@@ -11,8 +11,10 @@ function App() {
       <div
         css={css`
           display: flex;
-          gap: 1rem;
-          /* position: fixed; */
+          gap: 0.5rem;
+          justify-content: center;
+          align-items: center;
+          padding-right: 0.5rem;
         `}
       >
         <Sidebar />
@@ -21,12 +23,12 @@ function App() {
           css={css`
             flex: 1;
             position: relative;
+            overflow: hidden;
+            
           `}
         >
           <Banner />
           <Outlet />
-          {/* <Tabs /> */}
-          {/* <MusicForm /> */}
         </div>
       </div>
     </>

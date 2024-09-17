@@ -154,7 +154,6 @@ const Songs = () => {
     }
   };
 
-  console.log(playerData);
   return (
     <SongsContainer>
       {songs.map((song) => {
@@ -222,6 +221,9 @@ const Songs = () => {
                   </DropdownItem>
                   {isSubMenuOpen && (
                     <SubMenu>
+                      {playlists.length === 0 && (
+                        <SubMenuItem>No playlists found</SubMenuItem>
+                      )}
                       {playlists.map((playlist) => (
                         <SubMenuItem
                           key={playlist._id}

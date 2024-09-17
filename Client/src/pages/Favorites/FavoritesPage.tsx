@@ -1,11 +1,10 @@
-import styled from "@emotion/styled";
 import { RiDeleteBinLine } from "react-icons/ri";
 import LoadingSpinner from "../../components/LoadingSpinner.tsx/LoadingSpinner";
 import {
   ButtonContainer,
-  Colors,
   FavoriteButton,
   Icon,
+  PlayButton,
   SongDetails,
   SongInfo,
   SongItem,
@@ -13,49 +12,41 @@ import {
   SongsContainer,
   SongTitle,
 } from "../../components/Songs/SongsStyles";
-import { useAppDispatch, useAppSelector } from "../../store";
 import { removeFavoriteRequest } from "../../features/favorites/favoritesSlices";
+import { useAppDispatch, useAppSelector } from "../../store";
+import { FavContainer, NoItemsMessage, Title } from "./FavoritePageStyle";
+import MusicPlayer from "../../components/MusicPlayer/MusicPlayer";
+import { useState } from "react";
+import { Song } from "../../types/songTypes";
+import { FaPlay } from "react-icons/fa";
 
 function FavoritesPage() {
   const { favorites: favSongs, status } = useAppSelector(
     (state) => state.favorites
   );
+  const [playerData, setPlayerData] = useState({
+    url: "https://cdn-preview-8.dzcdn.net/stream/c-8ffd078d7efe834321a9ec2c1954efdf-1.mp3",
+    isPlaying: false,
+    title: "sois pas jaloux",
+    artist: "Maître Gims",
+  });
   const dispatch = useAppDispatch();
 
   const handelRemoveFavorite = (id: string) => {
     dispatch(removeFavoriteRequest(id));
   };
-
-  const Title = styled.h1`
-    font-size: 24px;
-    font-weight: bold;
-    color: ${Colors.text};
-    margin-bottom: 20px;
-    text-align: center;
-  `;
-
-  const FavContainer = styled.div`
-    padding: 1rem;
-    background-color: ${Colors.background};
-    margin: 1rem auto;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    width: 100%;
-    max-width: 800px;
-    border: 1px solid ${Colors.border};
-    height: auto;
-    max-height: 65vh;
-    min-height: 50vh;
-    overflow-y: auto;
-    overflow-x: hidden;
-  `;
-
-  const NoItemsMessage = styled.p`
-    color: ${Colors.text};
-    text-align: center;
-    font-size: 18px;
-    font-weight: bold;
-  `;
+  const handleSongClick = (song: Song) => {
+    if (playerData.url === song.songUrl) {
+      setPlayerData((prev) => ({ ...prev, isPlaying: !prev.isPlaying }));
+    } else {
+      setPlayerData({
+        url: song.songUrl,
+        isPlaying: true,
+        title: song.title,
+        artist: song.artist,
+      });
+    }
+  };
 
   return (
     <>
@@ -74,13 +65,23 @@ function FavoritesPage() {
                 <SongDetails>
                   <Icon />
                   <SongInfo>
-                    <SongTitle>{song.title}</SongTitle>
+                    <SongTitle>{song.title.toLocaleLowerCase()}</SongTitle>
                     <SongMeta>
-                      {song.artist} • {song.album} • {song.genre}
+                      {song.artist.toLocaleLowerCase()} •{" "}
+                      {song.album.toLocaleLowerCase()} •{" "}
+                      {song.genre.toLocaleLowerCase()}
                     </SongMeta>
                   </SongInfo>
                 </SongDetails>
                 <ButtonContainer>
+                  <PlayButton
+                    onClick={() => {
+                      handleSongClick(song);
+                    }}
+                    isPlaying={playerData.url === song.songUrl}
+                  >
+                    <FaPlay />
+                  </PlayButton>
                   <FavoriteButton
                     onClick={() => {
                       handelRemoveFavorite(song._id);
@@ -91,6 +92,7 @@ function FavoritesPage() {
                 </ButtonContainer>
               </SongItem>
             ))}
+            <MusicPlayer playerData={playerData} />
           </SongsContainer>
         )}
       </FavContainer>

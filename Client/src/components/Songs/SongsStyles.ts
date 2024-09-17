@@ -15,22 +15,21 @@ export const Colors = {
   primaryDark: "#e65c50",
 };
 
-// SongsStyles.ts
 export const SongsContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
-
+  margin-bottom: 50px;
   padding-top: 0;
-  padding-bottom: 60px; // Make space for the fixed MusicPlayer
+  padding-bottom: 110px; // Make space for the fixed MusicPlayer
   overflow-y: auto;
   background-color: ${Colors.background};
   color: ${Colors.text};
 
-  @media (max-width: 768px) {
-    padding: 1rem;
-  }
+
+
+
 `;
 
 export const SongItem = styled.div`
@@ -38,23 +37,38 @@ export const SongItem = styled.div`
   align-items: center;
   justify-content: space-between;
   padding: 10px;
-  margin: 10px 0;
+  margin: 10px auto;
   width: 100%;
   max-width: 600px;
   border-radius: 10px;
   background-color: ${Colors.darkBackground};
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.3s ease;
   cursor: pointer;
+
+  position: relative; // Ensure dropdown positioning works
 
   &:hover {
     background-color: ${Colors.darkHoverBackground};
+  }
+
+  @media (max-width: 768px) {
+    padding: 15px;
+    margin: 8px auto;
   }
 
   @media (max-width: 600px) {
     flex-direction: column;
     align-items: flex-start;
     padding: 15px;
+    margin: 8px auto;
+    width: calc(100% - 40px);
+    box-sizing: border-box;
+  }
+
+  @media (max-width: 480px) {
+    padding: 12px;
+    margin: 6px 10px;
   }
 `;
 
@@ -101,6 +115,7 @@ export const SongMeta = styled.div`
     font-size: 12px;
   }
 `;
+
 export const ButtonContainer = styled.div`
   display: flex;
   align-items: center;
@@ -115,9 +130,8 @@ export const FavoriteButton = styled.button<{ isFav?: boolean }>`
   cursor: pointer;
   color: ${(props) => (props.isFav ? Colors.primary : Colors.lightText)};
   position: relative;
-  &:hover {
-    scale: 1.5;
-  }
+
+  
 
   @media (max-width: 600px) {
     align-self: flex-end;
@@ -167,11 +181,14 @@ export const DropdownMenu = styled.div<{ show: boolean }>`
   padding: 5px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   display: ${(props) => (props.show ? "block" : "none")};
-  z-index: 100;
+  width: max-content;
+  /* overflow: hidden; */
+  z-index: 20000;
 `;
 
 export const DropdownItem = styled.div`
   padding: 8px 12px;
+  z-index: 100000;
   font-size: 12px;
   cursor: pointer;
   color: ${Colors.text};
@@ -184,19 +201,25 @@ export const DropdownItem = styled.div`
 
 export const SubMenu = styled.div`
   position: absolute;
-  right: 100%;
+  right: 50%;
   display: flex;
   flex-direction: column;
   width: 100px;
   background-color: ${Colors.darkBackground};
-  top: 60%;
+  top: 70%;
   border-radius: 5px;
-
-  display: flex;
-  flex-direction: column;
   gap: 10px;
-  height: auto;
-  overflow: auto;
+  height: 100px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  z-index: 30000;
+
+  @media (max-width: 600px) {
+    right: 0;
+    top: 100%;
+    width: 100%;
+    border-radius: 0;
+  }
 `;
 
 export const SubMenuItem = styled.div`
@@ -209,5 +232,10 @@ export const SubMenuItem = styled.div`
 
   &:hover {
     background-color: ${Colors.primaryHover};
+  }
+
+  @media (max-width: 600px) {
+    font-size: 14px;
+    padding: 10px;
   }
 `;
