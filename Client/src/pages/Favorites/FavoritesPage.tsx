@@ -18,14 +18,11 @@ import { removeFavoriteRequest } from "../../features/favorites/favoritesSlices"
 import { useAppDispatch, useAppSelector } from "../../store";
 import { Song } from "../../types/songTypes";
 import { FavContainer, NoItemsMessage, Title } from "./FavoritePageStyle";
+import useTitle from "../../hooks/useTitle";
 
 function FavoritesPage() {
-  const { favorites: favSongs,} = useAppSelector(
-    (state) => state.favorites
-  );
-
-
-
+  const { favorites: favSongs } = useAppSelector((state) => state.favorites);
+  useTitle({ title: "Favorites" });
 
   const [playerData, setPlayerData] = useState({
     url: "https://cdn-preview-8.dzcdn.net/stream/c-8ffd078d7efe834321a9ec2c1954efdf-1.mp3",
@@ -56,7 +53,7 @@ function FavoritesPage() {
     <>
       <Title>Favorites</Title>
       <FavContainer>
-        { favSongs.length === 0 ? (
+        {favSongs.length === 0 ? (
           <NoItemsMessage>
             No favorite songs found. Add some songs to your favorites.
           </NoItemsMessage>

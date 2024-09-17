@@ -5,6 +5,7 @@ import { addSongRequest, clearError } from "../../features/songs/songsSlice";
 import toast from "react-hot-toast";
 import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import useTitle from "../../hooks/useTitle";
 function AddMusicPage() {
   const {
     register,
@@ -18,6 +19,7 @@ function AddMusicPage() {
   const previousSongsLength = useRef(songs.length);
   const previousStatus = useRef(status);
   const navigate = useNavigate();
+  useTitle({ title: "Add Music" });
 
   // Handle form submission
   const onSubmit: SubmitHandler<FieldValues> = (data) => {

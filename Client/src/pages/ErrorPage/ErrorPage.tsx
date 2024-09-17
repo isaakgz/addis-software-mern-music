@@ -11,10 +11,12 @@ import {
   ErrorTitle,
   GoHomeButton,
 } from "./ErrorPageStyle";
+import useTitle from "../../hooks/useTitle";
 
 function ErrorPage() {
   const error = useRouteError();
   const navigate = useNavigate();
+  useTitle({ title: "Error" });
 
   return (
     <ErrorContainer>

@@ -31,6 +31,8 @@ import {
 import { FieldValues, useForm } from "react-hook-form"; // React-hook-form for form management
 import toast from "react-hot-toast"; // Notification system
 import { useNavigate } from "react-router-dom";
+import useTitle from "../../hooks/useTitle";
+
 
 // Component Definition: PlaylistsPage
 function PlaylistsPage() {
@@ -46,6 +48,7 @@ function PlaylistsPage() {
     formState: { errors },
     reset,
   } = useForm();
+  useTitle({ title: "Playlists" });
 
   // Redux hooks
   const dispatch = useAppDispatch();

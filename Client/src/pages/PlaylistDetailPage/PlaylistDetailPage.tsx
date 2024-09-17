@@ -25,6 +25,7 @@ import { FavContainer, NoItemsMessage } from "../Favorites/FavoritePageStyle";
 import { Button, PlaylistDescription } from "./PlaylistDetailStyles";
 import MusicPlayer from "../../components/MusicPlayer/MusicPlayer";
 import { FaPlay } from "react-icons/fa";
+import useTitle from "../../hooks/useTitle";
 
 function PlaylistDetailPage() {
   const navigate = useNavigate();
@@ -36,7 +37,7 @@ function PlaylistDetailPage() {
     title: "sois pas jaloux",
     artist: "Maître Gims",
   });
-
+  useTitle({ title: "Playlist" });
   const { playlists } = useAppSelector((state) => state.playlists);
   const { songs } = useAppSelector((state) => state.songs);
   const dispatch = useAppDispatch();
@@ -120,9 +121,7 @@ function PlaylistDetailPage() {
                   >
                     <FaPlay />
                   </PlayButton>
-                  <FavoriteButton
-                    onClick={() => handleRemoveSong(song._id)}
-                  >
+                  <FavoriteButton onClick={() => handleRemoveSong(song._id)}>
                     <RiDeleteBinLine />
                   </FavoriteButton>
                 </ButtonContainer>
