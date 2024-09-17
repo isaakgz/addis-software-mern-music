@@ -15,6 +15,7 @@ function App() {
           justify-content: center;
           align-items: center;
           padding-right: 0.5rem;
+          height:100vh;
         `}
       >
         <Sidebar />
@@ -24,6 +25,7 @@ function App() {
             flex: 1;
             position: relative;
             overflow: hidden;
+            height: 100vh;
             
           `}
         >

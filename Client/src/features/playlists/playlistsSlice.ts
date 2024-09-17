@@ -1,11 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
-export interface Playlist {
-  name: string;
-  _id: string;
-  songs: string[];
-}
+import { Playlist } from "../../types/songTypes";
 
 interface PlaylistsState {
   playlists: Playlist[];

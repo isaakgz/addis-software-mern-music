@@ -41,7 +41,7 @@ function PlaylistDetailPage() {
   const { songs } = useAppSelector((state) => state.songs);
   const dispatch = useAppDispatch();
 
-  const handelRemoveSong = (songId: string) => {
+  const handleRemoveSong = (songId: string) => {
     if (playlistId) {
       dispatch(removeSongFromPlaylistRequest({ playlistId, songId }));
       setPlaylistSongs((prevSongs) =>
@@ -59,8 +59,6 @@ function PlaylistDetailPage() {
       );
       setPlaylistSongs(songInPlaylist);
     }
-
-    // }
   }, [playlists, playlistId, songs, dispatch]);
 
   const handleSongClick = (song: Song) => {
@@ -94,16 +92,17 @@ function PlaylistDetailPage() {
           justifyContent: "center",
         }}
       >
-        {playlistSongs.length > 0 ? (
-          <SongsContainer>
-            <PlaylistDescription>
-              <InfoText>
-                <Name>Playlist Name</Name>
-                <Count>{playlistSongs.length} songs</Count>
-              </InfoText>
-              <Button onClick={() => navigate("/")}> Add to Playlist</Button>
-            </PlaylistDescription>
-            {playlistSongs.map((song) => (
+        <SongsContainer>
+          <PlaylistDescription>
+            <InfoText>
+              <Name>Playlist Name</Name>
+              <Count>{playlistSongs.length} songs</Count>
+            </InfoText>
+            <Button onClick={() => navigate("/")}>Add to Playlist</Button>
+          </PlaylistDescription>
+
+          {playlistSongs.length > 0 ? (
+            playlistSongs.map((song) => (
               <SongItem key={song._id}>
                 <SongDetails>
                   <Icon />
@@ -116,27 +115,23 @@ function PlaylistDetailPage() {
                 </SongDetails>
                 <ButtonContainer>
                   <PlayButton
-                    onClick={() => {
-                      handleSongClick(song);
-                    }}
+                    onClick={() => handleSongClick(song)}
                     isPlaying={playerData.url === song.songUrl}
                   >
                     <FaPlay />
                   </PlayButton>
                   <FavoriteButton
-                    onClick={() => {
-                      handelRemoveSong(song._id);
-                    }}
+                    onClick={() => handleRemoveSong(song._id)}
                   >
                     <RiDeleteBinLine />
                   </FavoriteButton>
                 </ButtonContainer>
               </SongItem>
-            ))}
-          </SongsContainer>
-        ) : (
-          <NoItemsMessage>No songs in this playlist</NoItemsMessage>
-        )}
+            ))
+          ) : (
+            <NoItemsMessage>No songs in this playlist</NoItemsMessage>
+          )}
+        </SongsContainer>
         <MusicPlayer playerData={playerData} />
       </FavContainer>
     </>

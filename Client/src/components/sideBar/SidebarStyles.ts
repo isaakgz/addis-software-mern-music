@@ -11,7 +11,7 @@ export const SidebarContainer = styled.div<{ open: boolean }>`
     #171b16,
     #11120e
   );
-  height: 90vh;
+  height: 92vh;
   padding: 1rem;
   padding-top: 2rem;
   border-top-right-radius: 1.5rem;

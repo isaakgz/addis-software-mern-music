@@ -21,3 +21,9 @@ export interface DeezerSong {
   };
   preview: string;
 }
+
+export interface Playlist {
+  name: string;
+  _id: string;
+  songs: string[];
+}

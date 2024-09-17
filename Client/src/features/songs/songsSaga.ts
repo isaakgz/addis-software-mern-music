@@ -1,4 +1,4 @@
-import { PayloadAction } from "@reduxjs/toolkit";
+import toast from "react-hot-toast";
 import { call, put, takeLatest } from "redux-saga/effects";
 import {
   addSong,
@@ -6,7 +6,7 @@ import {
   fetchSongs,
   updateSong,
 } from "../../services/songServices";
-import { Song, SongPayload } from "../../types/songTypes";
+import { Song } from "../../types/songTypes";
 import handleSagaError from "../../utils/errorHandlerSaga";
 import {
   addSongFailure,
@@ -21,7 +21,6 @@ import {
   updateSongRequest,
   updateSongSuccess,
 } from "./songsSlice";
-import toast from "react-hot-toast";
 
 // This is a worker saga that fetches songs from the API and dispatches the appropriate action based on the result.
 function* fetchSongsSaga() {
@@ -34,7 +33,7 @@ function* fetchSongsSaga() {
 }
 
 // a worker saga to add a song
-function* addSongSaga(action: PayloadAction<SongPayload>) {
+function* addSongSaga(action: ReturnType<typeof addSongRequest>) {
   try {
     const response: Song = yield call(addSong, action.payload);
     yield put(addSongSuccess(response));
@@ -44,7 +43,7 @@ function* addSongSaga(action: PayloadAction<SongPayload>) {
 }
 
 //worker saga to delete a song
-function* deleteSongSaga(action: PayloadAction<string>) {
+function* deleteSongSaga(action: ReturnType<typeof deleteSongRequest>) {
   try {
     const response: string = yield call(deleteSong, action.payload);
     yield put(deleteSongSuccess(response));
@@ -55,7 +54,7 @@ function* deleteSongSaga(action: PayloadAction<string>) {
 }
 
 //a worker saga to update a song
-function* updateSongSaga(action: PayloadAction<Song>) {
+function* updateSongSaga(action: ReturnType<typeof updateSongRequest>) {
   try {
     const { _id, ...payload } = action.payload;
     const response: Song = yield call(updateSong, payload, _id);

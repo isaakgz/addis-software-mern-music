@@ -10,11 +10,13 @@ import FavoritesPage from "./pages/Favorites/FavoritesPage";
 import PlaylistsPage from "./pages/PlaylistsPage/PlaylistsPage";
 import StatisticsPage from "./pages/StatisticsPage/StatisticsPage";
 import PlaylistDetailPage from "./pages/PlaylistDetailPage/PlaylistDetailPage";
+import ErrorPage from "./pages/ErrorPage/ErrorPage";
 
 const router = createBrowserRouter([
   {
     path: "/auth",
     element: <AuthPage />,
+    errorElement: <ErrorPage />,
     children: [
       {
         path: "/auth",
@@ -29,6 +31,7 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <PrivateRoute />,
+    errorElement: <ErrorPage />,
     children: [
       {
         path: "/",

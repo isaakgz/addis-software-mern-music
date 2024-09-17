@@ -6,7 +6,7 @@ export const FormContainer = styled.div`
   justify-content: center;
   align-items: center;
   width: 100%;
-  padding: 1rem;
+  padding: 0.8rem;
   @media (max-width: 768px) {
     height: auto;
     padding: 2rem 0;

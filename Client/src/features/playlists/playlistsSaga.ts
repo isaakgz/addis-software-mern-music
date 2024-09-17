@@ -22,11 +22,7 @@ import {
   removeSongFromPlaylistSuccess,
 } from "./playlistsSlice";
 
-interface Playlist {
-  name: string;
-  _id: string;
-  songs: string[];
-}
+import { Playlist } from "../../types/songTypes";
 
 //worker saga to handle fetchPlaylistsRequest
 function* fetchPlaylistsSaga() {

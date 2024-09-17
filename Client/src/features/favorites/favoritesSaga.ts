@@ -1,9 +1,12 @@
+import toast from "react-hot-toast";
 import { call, put, takeLatest } from "redux-saga/effects";
 import {
   addFavorite,
   fetchFavorites,
   removeFavorite,
 } from "../../services/favoriteServices";
+import { Song } from "../../types/songTypes";
+import handleSagaError from "../../utils/errorHandlerSaga";
 import {
   addFavoriteFailure,
   addFavoriteRequest,
@@ -15,10 +18,6 @@ import {
   removeFavoriteRequest,
   removeFavoriteSuccess,
 } from "./favoritesSlices";
-import handleSagaError from "../../utils/errorHandlerSaga";
-import { Song } from "../../types/songTypes";
-import { PayloadAction } from "@reduxjs/toolkit";
-import toast from "react-hot-toast";
 
 //worker saga to fetch favorites music
 function* fetchFavoritesSaga() {
@@ -31,7 +30,7 @@ function* fetchFavoritesSaga() {
 }
 
 //worker saga to add favorite music
-function* addFavoriteSaga(action: PayloadAction<string>) {
+function* addFavoriteSaga(action: ReturnType<typeof addFavoriteRequest>) {
   try {
     const response: Song = yield call(addFavorite, action.payload);
     yield put(addFavoriteSuccess(response));

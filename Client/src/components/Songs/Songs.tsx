@@ -9,14 +9,20 @@ import {
   removeFavoriteRequest,
 } from "../../features/favorites/favoritesSlices";
 import {
+  addSongToPlaylistRequest,
+  fetchPlaylistsRequest,
+} from "../../features/playlists/playlistsSlice";
+import {
   deleteSongRequest,
   fetchSongsRequest,
   updateSongRequest,
 } from "../../features/songs/songsSlice";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { Song } from "../../types/songTypes";
+import LoadingSpinner from "../LoadingSpinner.tsx/LoadingSpinner";
 import Modal from "../Modal/Modal";
 import MusicForm from "../MuiscForm/MusicForm";
+import MusicPlayer from "../MusicPlayer/MusicPlayer";
 import {
   ButtonContainer,
   DropdownItem,
@@ -34,8 +40,6 @@ import {
   SubMenu,
   SubMenuItem,
 } from "./SongsStyles";
-import { addSongToPlaylistRequest } from "../../features/playlists/playlistsSlice";
-import MusicPlayer from "../MusicPlayer/MusicPlayer";
 
 // Component Definition
 const Songs = () => {
@@ -69,6 +73,7 @@ const Songs = () => {
   useEffect(() => {
     dispatch(fetchSongsRequest());
     dispatch(fetchFavoritesRequest());
+    dispatch(fetchPlaylistsRequest());
   }, [dispatch]);
 
   // Sync local favorites with redux favorites
@@ -139,6 +144,8 @@ const Songs = () => {
   const handleAddToPlaylist = (playlistId: string, songId: string) => {
     // dispatch add to playlist action here
     dispatch(addSongToPlaylistRequest({ playlistId, songId }));
+    setDropdownOpen(null);
+    setSubMenuOpen(false);
   };
 
   const handleSongClick = (song: Song) => {
@@ -156,94 +163,99 @@ const Songs = () => {
 
   return (
     <SongsContainer>
-      {songs.map((song) => {
-        const isFavorite = favorites.some((fav) => fav._id === song._id);
-        return (
-          <SongItem key={song._id}>
-            <SongDetails>
-              <Icon />
-              <SongInfo>
-                <SongTitle>{song.title.toLocaleLowerCase()}</SongTitle>
-                <SongMeta>
-                  {song.artist.toLocaleLowerCase()} •{" "}
-                  {song.album.toLocaleLowerCase()} • {song.genre}
-                </SongMeta>
-              </SongInfo>
-            </SongDetails>
-            <ButtonContainer>
-              <PlayButton
-                onClick={() => {
-                  handleSongClick(song);
-                }}
-                isPlaying={playerData.url === song.songUrl}
-              >
-                <FaPlay />
-              </PlayButton>
-              <FavoriteButton
-                onClick={() => {
-                  handleFav(song._id);
-                }}
-                isFav={isFavorite}
-              >
-                <MdFavoriteBorder />
-              </FavoriteButton>
-              <OptionsButton onClick={() => toggleDropdown(song._id)}>
-                <FaEllipsisV />
-
-                <DropdownMenu
-                  show={dropdownOpen === song._id}
-                  onMouseLeave={() => {
-                    setDropdownOpen(null);
-                    setSubMenuOpen(false);
+      {status == "loading" && !songs ? (
+        <LoadingSpinner />
+      ) : (
+        songs.map((song) => {
+          const isFavorite = favorites.some((fav) => fav._id === song._id);
+          return (
+            <SongItem key={song._id}>
+              <SongDetails>
+                <Icon />
+                <SongInfo>
+                  <SongTitle>{song.title.toLocaleLowerCase()}</SongTitle>
+                  <SongMeta>
+                    {song.artist.toLocaleLowerCase()} •{" "}
+                    {song.album.toLocaleLowerCase()} • {song.genre}
+                  </SongMeta>
+                </SongInfo>
+              </SongDetails>
+              <ButtonContainer>
+                <PlayButton
+                  onClick={() => {
+                    handleSongClick(song);
                   }}
+                  isPlaying={playerData.url === song.songUrl}
                 >
-                  <DropdownItem
-                    onClick={() => {
-                      openEditModal(song);
+                  <FaPlay />
+                </PlayButton>
+                <FavoriteButton
+                  onClick={() => {
+                    handleFav(song._id);
+                  }}
+                  isFav={isFavorite}
+                >
+                  <MdFavoriteBorder />
+                </FavoriteButton>
+                <OptionsButton onClick={() => toggleDropdown(song._id)}>
+                  <FaEllipsisV />
+
+                  <DropdownMenu
+                    show={dropdownOpen === song._id}
+                    onMouseLeave={() => {
                       setDropdownOpen(null);
+                      setSubMenuOpen(false);
                     }}
                   >
-                    Edit
-                  </DropdownItem>
-                  <DropdownItem
-                    onClick={() => {
-                      handleDelete(song._id);
-                    }}
-                  >
-                    Delete
-                  </DropdownItem>
-                  <DropdownItem
-                    onMouseEnter={() => {
-                      setSubMenuOpen(true);
-                    }}
-                  >
-                    Add to Playlist
-                  </DropdownItem>
-                  {isSubMenuOpen && (
-                    <SubMenu>
-                      {playlists.length === 0 && (
-                        <SubMenuItem>No playlists found</SubMenuItem>
-                      )}
-                      {playlists.map((playlist) => (
-                        <SubMenuItem
-                          key={playlist._id}
-                          onClick={() => {
-                            handleAddToPlaylist(playlist._id, song._id);
-                            setSubMenuOpen(false);
-                            setDropdownOpen(null);
-                          }}
-                        >
-                          {playlist.name}
-                        </SubMenuItem>
-                      ))}
-                    </SubMenu>
-                  )}
-                </DropdownMenu>
-              </OptionsButton>
-            </ButtonContainer>
-          </SongItem>
-        );
-      })}
+                    <DropdownItem
+                      onClick={() => {
+                        openEditModal(song);
+                        setDropdownOpen(null);
+                      }}
+                    >
+                      Edit
+                    </DropdownItem>
+                    <DropdownItem
+                      onClick={() => {
+                        handleDelete(song._id);
+                      }}
+                    >
+                      Delete
+                    </DropdownItem>
+                    <DropdownItem
+                      onMouseEnter={() => {
+                        setSubMenuOpen(true);
+                      }}
+                    >
+                      Add to Playlist
+                    </DropdownItem>
+                    {isSubMenuOpen && (
+                      <SubMenu>
+                        {playlists.length === 0 && (
+                          <SubMenuItem>No playlists found</SubMenuItem>
+                        )}
+                        {playlists.map((playlist) => (
+                          <SubMenuItem
+                            key={playlist._id}
+                            onClick={() => {
+                              handleAddToPlaylist(playlist._id, song._id);
+                              setSubMenuOpen(false);
+                              setDropdownOpen(null);
+                            }}
+                          >
+                            {playlist.name}
+                          </SubMenuItem>
+                        ))}
+                      </SubMenu>
+                    )}
+                  </DropdownMenu>
+                </OptionsButton>
+              </ButtonContainer>
+            </SongItem>
+          );
+        })
+      )}
+
       {isModalOpen && (
         <Modal isOpen={isModalOpen} onClose={closeModal}>
           <MusicForm

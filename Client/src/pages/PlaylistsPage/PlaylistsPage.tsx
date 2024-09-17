@@ -49,12 +49,12 @@ function PlaylistsPage() {
 
   // Redux hooks
   const dispatch = useAppDispatch();
-  const { playlists, error, status } = useAppSelector(
+  const { playlists, error, status:playListStat } = useAppSelector(
     (state) => state.playlists
   ); // Get playlists state from Redux
 
   // Refs to track previous values for status and playlists length
-  const previousStatus = useRef(status);
+  const previousStatus = useRef(playListStat);
   const previousPlaylistsLength = useRef(playlists.length);
 
   // useEffect to fetch playlists on component mount
@@ -65,22 +65,33 @@ function PlaylistsPage() {
 
   // useEffect to handle side effects when status or playlists change
   useEffect(() => {
+    // Dismiss any existing toasts when status changes
+    toast.dismiss();
+
+    // Show error toast if there's an error
     if (error) {
-      toast.dismiss(); // Dismiss any existing toasts
-      toast.error(error); // Show error message if there's an error
-    } else if (
-      status === "idle" &&
+      toast.error(error);
+    }
+
+    // Check if a playlist has been successfully created (status is "idle" after creation)
+    if (
+      playListStat === "idle" &&
       playlists.length > previousPlaylistsLength.current
     ) {
-      toast.dismiss(); // Dismiss any existing toasts
-      toast.success("Playlist created successfully"); // Show success toast if playlist created
-      previousPlaylistsLength.current = playlists.length; // Update playlist length reference
-      closeAddModal(); // Close modal
-      reset(); // Reset form
-    } else if (status === "loading" && previousStatus.current === "loading") {
-      toast.loading("Creating playlist..."); // Show loading message when creating a playlist
+      toast.success("Playlist created successfully");
+      previousPlaylistsLength.current = playlists.length; // Update the previous length to the current one
+      closeAddModal(); // Close the modal
+      reset(); // Reset the form
     }
-  }, [dispatch, error, status, playlists.length, reset]);
+
+    // Show loading toast when status transitions to "loading"
+    if (status === "loading" && previousStatus.current === "loading") {
+      toast.loading("Creating playlist...");
+    }
+
+    // Keep track of the current status
+    previousStatus.current = playListStat;
+  }, [dispatch, error, playListStat, playlists.length, reset]);
 
   // Event handler to toggle the dropdown visibility for playlist actions
   const toggleDropdown = (id: string) => {
@@ -120,7 +131,7 @@ function PlaylistsPage() {
         Create Playlist
       </CreatePlaylistButton>
       {/* Playlist List */}
-      <PlaylistsContainer >
+      <PlaylistsContainer>
         {playlists.length === 0 && <Title>No playlists found</Title>}
         {playlists.map((playlist) => (
           <PlaylistCard key={playlist._id}>

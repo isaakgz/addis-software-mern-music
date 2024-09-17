@@ -16,7 +16,7 @@ export const StatsContainer = styled.div`
   border: 1px solid ${Colors.border};
   height: auto;
   min-height: 60vh;
-  max-height: 60vh;
+  max-height: 68vh;
   overflow-y: auto;
   overflow-x: hidden;
 

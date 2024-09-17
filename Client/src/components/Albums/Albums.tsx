@@ -1,9 +1,9 @@
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import albumCover from "../../assets/icons/cd-cover (1).png";
 import { fetchStatusRequest } from "../../features/stats/statsSlice";
 import { useAppDispatch, useAppSelector } from "../../store";
-import InfoCard from "../InfoCard/InfoCard";
 import Error from "../Error/Error";
+import InfoCard from "../InfoCard/InfoCard";
 import LoadingSpinner from "../LoadingSpinner.tsx/LoadingSpinner";
 
 function Albums() {
@@ -12,11 +12,6 @@ function Albums() {
     (state) => state.statistics
   );
   const dispatch = useAppDispatch();
-
-  //fetching the status data when the component mounts
-  useEffect(() => {
-    dispatch(fetchStatusRequest());
-  }, [dispatch]);
 
   //memoizing the status data to prevent unnecessary re-renders
   const memoizedStatusData = useMemo(() => statusData, [statusData]);

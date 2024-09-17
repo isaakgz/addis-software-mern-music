@@ -37,7 +37,7 @@ function AddMusicPage() {
       toast.success("Music added successfully");
       previousSongsLength.current = songs.length;
       navigate("/");
-    } else if (status === "loading" && previousStatus.current === "loading") {
+    } else if (status === "loading" && previousStatus.current !== "loading") {
       toast.loading("Adding music...");
     }
     previousStatus.current = status;

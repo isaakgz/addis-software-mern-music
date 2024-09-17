@@ -1,5 +1,7 @@
+import { useState } from "react";
+import { FaPlay } from "react-icons/fa";
 import { RiDeleteBinLine } from "react-icons/ri";
-import LoadingSpinner from "../../components/LoadingSpinner.tsx/LoadingSpinner";
+import MusicPlayer from "../../components/MusicPlayer/MusicPlayer";
 import {
   ButtonContainer,
   FavoriteButton,
@@ -14,16 +16,17 @@ import {
 } from "../../components/Songs/SongsStyles";
 import { removeFavoriteRequest } from "../../features/favorites/favoritesSlices";
 import { useAppDispatch, useAppSelector } from "../../store";
-import { FavContainer, NoItemsMessage, Title } from "./FavoritePageStyle";
-import MusicPlayer from "../../components/MusicPlayer/MusicPlayer";
-import { useState } from "react";
 import { Song } from "../../types/songTypes";
-import { FaPlay } from "react-icons/fa";
+import { FavContainer, NoItemsMessage, Title } from "./FavoritePageStyle";
 
 function FavoritesPage() {
-  const { favorites: favSongs, status } = useAppSelector(
+  const { favorites: favSongs,} = useAppSelector(
     (state) => state.favorites
   );
+
+
+
+
   const [playerData, setPlayerData] = useState({
     url: "https://cdn-preview-8.dzcdn.net/stream/c-8ffd078d7efe834321a9ec2c1954efdf-1.mp3",
     isPlaying: false,
@@ -34,6 +37,7 @@ function FavoritesPage() {
 
   const handelRemoveFavorite = (id: string) => {
     dispatch(removeFavoriteRequest(id));
+    setPlayerData((prev) => ({ ...prev, isPlaying: false }));
   };
   const handleSongClick = (song: Song) => {
     if (playerData.url === song.songUrl) {
@@ -52,9 +56,7 @@ function FavoritesPage() {
     <>
       <Title>Favorites</Title>
       <FavContainer>
-        {status === "loading" ? (
-          <LoadingSpinner />
-        ) : favSongs.length === 0 ? (
+        { favSongs.length === 0 ? (
           <NoItemsMessage>
             No favorite songs found. Add some songs to your favorites.
           </NoItemsMessage>

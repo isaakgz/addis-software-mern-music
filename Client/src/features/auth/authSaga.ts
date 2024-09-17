@@ -1,6 +1,7 @@
-import { PayloadAction } from "@reduxjs/toolkit";
 import { call, put, takeLatest } from "redux-saga/effects";
-import { signUp, login, logout } from "../../services/authServices";
+import { login, logout, signUp } from "../../services/authServices";
+import { User } from "../../types/userTypes";
+import handleSagaError from "../../utils/errorHandlerSaga";
 import {
   loginFailure,
   loginRequest,
@@ -10,12 +11,9 @@ import {
   signUpRequest,
   signUpSuccess,
 } from "./authSlice";
-import { AxiosError } from "axios";
-import { User, SignUpPayload, LoginPayload } from "../../types/userTypes";
-import handleSagaError from "../../utils/errorHandlerSaga";
 
 // worker saga for sign up
-function* signUpSaga(action: PayloadAction<SignUpPayload>) {
+function* signUpSaga(action: ReturnType<typeof signUpRequest>) {
   try {
     const user: User = yield call(signUp, action.payload);
     yield put(signUpSuccess(user));
@@ -25,7 +23,7 @@ function* signUpSaga(action: PayloadAction<SignUpPayload>) {
 }
 
 // worker saga for login
-function* loginSaga(action: PayloadAction<LoginPayload>) {
+function* loginSaga(action: ReturnType<typeof loginRequest>) {
   try {
     const user: User = yield call(login, action.payload);
     yield put(loginSuccess(user));
