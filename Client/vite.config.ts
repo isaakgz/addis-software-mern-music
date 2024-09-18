@@ -1,4 +1,4 @@
-/// <reference types="vite/client" />
+
 
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
@@ -9,12 +9,12 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: import.meta.env.VITE_API_URL as string, // Server URL (Proxy)
+        target: "", // Server URL (Proxy)
         changeOrigin: true, // Changes the origin of the host header to the target URL
         secure: false, // Disables SSL certificate verification
       },
       "/search": {
-        target: "https://api.deezer.com",
+        target: "",
         changeOrigin: true,
         secure: false,
       },
