@@ -1,17 +1,23 @@
 import cookieParser from "cookie-parser";
+import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
 import dbConfig from "./config/dbConfig.js";
 import { handleError, notFound } from "./middlewares/errorHandlerMiddleware.js";
 import router from "./routes/index.js";
 dotenv.config();
-
-
 // Create express app
 const app = express();
 // Connect to the database
 await dbConfig();
 const port = process.env.PORT;
+
+//CORS configuration
+const corsOptions = {
+  origin: process.env.CORS_ORIGIN,
+  credentials: true,
+};
+app.use(cors(corsOptions));
 
 //middleware to parse json
 app.use(express.json());
