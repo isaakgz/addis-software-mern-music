@@ -1,6 +1,7 @@
 import axios from "axios";
-import { DeezerSong, Song } from "../types/songTypes";
+import { Song } from "../types/songTypes";
 import api from "./apiConfig";
+import { SongPayload } from "../types/songTypes";
 
 export interface SongResponse {
   data: Song[];
@@ -16,12 +17,6 @@ export const fetchSongs = async (): Promise<SongResponse> => {
   }
 };
 
-interface SongPayload {
-  title: string;
-  artist: string;
-  album: string;
-  genre: string;
-}
 //add a song
 export const addSong = async (songData: SongPayload) => {
   try {

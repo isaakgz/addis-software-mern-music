@@ -7,15 +7,15 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "http://localhost:3000", // Server URL (Proxy)
+        target: "https://addis-software-mern-music.onrender.com", // Server URL (Proxy)
         changeOrigin: true, // Changes the origin of the host header to the target URL
         secure: false, // Disables SSL certificate verification
       },
-      "/search" : {
-        target : "https://api.deezer.com",
-        changeOrigin : true,
-        secure : false
-      }
+      "/search": {
+        target: "https://api.deezer.com",
+        changeOrigin: true,
+        secure: false,
+      },
     },
   },
 });
