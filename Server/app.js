@@ -19,6 +19,11 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.path}`, req.headers);
+  next();
+});
+
 //middleware to parse json
 app.use(express.json());
 //middleware to parse urlencoded data

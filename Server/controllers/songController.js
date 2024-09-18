@@ -1,8 +1,9 @@
-import Song from "../models/songModel.js";
+import fetch from "node-fetch";
 import { AppError } from "../middlewares/errorHandlerMiddleware.js";
-import validateSong from "../utils/songValidation.js";
-import isSongExists from "../utils/songHelper.js";
+import Song from "../models/songModel.js";
 import sendResponse from "../utils/responseHelper.js";
+import isSongExists from "../utils/songHelper.js";
+import validateSong from "../utils/songValidation.js";
 
 // @desc    Get all songs
 // @route   GET /api/songs
@@ -192,14 +193,38 @@ const deleteSong = async (req, res, next) => {
   }
 };
 
+// @desc get song suggestions from deezer
+// @route GET /api/songs/suggestions
+// @access Private
+
+const getSuggestions = async (req, res, next) => {
+  const { query } = req.query;
+  try {
+    const response = await fetch(`https://api.deezer.com/search?q=${query}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const data = await response.json();
+    sendResponse(res, 200, "success", {
+      suggestions: data.data,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 // Export the functions
 export {
-  getSongs,
+  addSong,
+  deleteSong,
   getSongByArtist,
   getSongByGenre,
-  getSongsByAlbum,
   getSongById,
-  addSong,
+  getSongs,
+  getSongsByAlbum,
+  getSuggestions,
   updateSong,
-  deleteSong,
 };

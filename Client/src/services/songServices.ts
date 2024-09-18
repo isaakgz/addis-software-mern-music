@@ -1,7 +1,5 @@
-import axios from "axios";
-import { Song } from "../types/songTypes";
+import { Song, SongPayload } from "../types/songTypes";
 import api from "./apiConfig";
-import { SongPayload } from "../types/songTypes";
 
 export interface SongResponse {
   data: Song[];
@@ -57,13 +55,12 @@ export const deleteSong = async (_id: string) => {
 
 export const fetchSongSuggestions = async (query: string) => {
   try {
-    const response = await axios.get(`https://api.deezer.com/search`, {
-      params: { q: query },
-      headers: {
-        "Content-Type": "application/json",
+    const response = await api.get("/songs/suggestions", {
+      params: {
+        query,
       },
     });
-    return response.data.data; // Deezer returns an array of song objects in the `data` field
+    return response.data.data.suggestions;
   } catch (error) {
     console.error("Error fetching song suggestions:", error);
     throw error;
