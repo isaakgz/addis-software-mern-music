@@ -57,7 +57,7 @@ export const deleteSong = async (_id: string) => {
 
 export const fetchSongSuggestions = async (query: string) => {
   try {
-    const response = await axios.get(`/search`, {
+    const response = await axios.get(`https://api.deezer.com/search`, {
       params: { q: query },
       headers: {
         "Content-Type": "application/json",

@@ -1,3 +1,5 @@
+/// <reference types="vite/client" />
+
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
@@ -7,7 +9,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "https://addis-software-mern-music.onrender.com", // Server URL (Proxy)
+        target: import.meta.env.VITE_API_URL as string, // Server URL (Proxy)
         changeOrigin: true, // Changes the origin of the host header to the target URL
         secure: false, // Disables SSL certificate verification
       },
