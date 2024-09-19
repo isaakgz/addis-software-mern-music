@@ -10,7 +10,7 @@ const generateAndSetSessionToken = (res, userId) => {
     httpOnly: true, //cookie cannot be accessed by client-side scripts prevents XSS attacks
     secure: process.env.NODE_ENV === "production", //cookie will only be sent over HTTPS in production environment otherwise it will be sent over HTTP in development environment
     maxAge: 30 * 24 * 60 * 60 * 1000, //cookie will expire in 30 days
-    sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+    sameSite: "None", //cookie will be sent in all cross-origin requests
   });
 };
 

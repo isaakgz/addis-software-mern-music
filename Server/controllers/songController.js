@@ -1,4 +1,4 @@
-import fetch from "node-fetch";
+import axios from "axios";
 import { AppError } from "../middlewares/errorHandlerMiddleware.js";
 import Song from "../models/songModel.js";
 import sendResponse from "../utils/responseHelper.js";
@@ -200,16 +200,17 @@ const deleteSong = async (req, res, next) => {
 const getSuggestions = async (req, res, next) => {
   const { query } = req.query;
   try {
-    const response = await fetch(`https://api.deezer.com/search?q=${query}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    const data = await response.json();
+    const response = await axios.get(
+      `https://api.deezer.com/search?q=${query}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
     sendResponse(res, 200, "success", {
-      suggestions: data.data,
+      suggestions: response.data.data,
     });
   } catch (error) {
     next(error);
@@ -226,5 +227,6 @@ export {
   getSongs,
   getSongsByAlbum,
   getSuggestions,
-  updateSong,
+  updateSong
 };
+
