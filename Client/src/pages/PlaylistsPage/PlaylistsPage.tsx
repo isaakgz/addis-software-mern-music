@@ -1,7 +1,10 @@
 /** @jsxImportSource @emotion/react */
 import { useEffect, useRef, useState } from "react";
-import { FaEllipsisV, FaPlay, FaTrash } from "react-icons/fa"; // Import icons
+import { FieldValues, useForm } from "react-hook-form"; // React-hook-form for form management
+import toast from "react-hot-toast"; // Notification system
+import { FaEllipsisV, FaTrash } from "react-icons/fa"; // Import icons
 import { IoIosAddCircle } from "react-icons/io"; // Import Add Icon
+import { useNavigate } from "react-router-dom";
 import {
   Button,
   ErrorMessage,
@@ -15,30 +18,25 @@ import {
   deletePlaylistRequest,
   fetchPlaylistsRequest,
 } from "../../features/playlists/playlistsSlice"; // Redux action to add playlist
+import useTitle from "../../hooks/useTitle";
 import { useAppDispatch, useAppSelector } from "../../store"; // Redux hooks
 import {
-  Title,
-  CreatePlaylistButton,
-  PlaylistsContainer,
-  PlaylistCard,
-  PlaylistTitle,
   CountText,
-  PlaylistActions,
-  OptionButton,
-  DropdownMenu,
+  CreatePlaylistButton,
   DropdownItem,
+  DropdownMenu,
+  OptionButton,
+  PlaylistActions,
+  PlaylistCard,
+  PlaylistsContainer,
+  PlaylistTitle,
+  Title,
 } from "./PlaylistsStyles"; // Styled components for Playlists
-import { FieldValues, useForm } from "react-hook-form"; // React-hook-form for form management
-import toast from "react-hot-toast"; // Notification system
-import { useNavigate } from "react-router-dom";
-import useTitle from "../../hooks/useTitle";
-
 
 // Component Definition: PlaylistsPage
 function PlaylistsPage() {
   // Component state
   const [dropDownOpen, setDropdownOpen] = useState<string | null>(null); // Controls visibility of dropdown for each playlist
-  // Controls visibility of dropdown for each playlist
   const [isModalOpen, setModalOpen] = useState(false); // Controls modal visibility
 
   // React hook form setup
@@ -52,9 +50,11 @@ function PlaylistsPage() {
 
   // Redux hooks
   const dispatch = useAppDispatch();
-  const { playlists, error, status:playListStat } = useAppSelector(
-    (state) => state.playlists
-  ); // Get playlists state from Redux
+  const {
+    playlists,
+    error,
+    status: playListStat,
+  } = useAppSelector((state) => state.playlists); // Get playlists state from Redux
 
   // Refs to track previous values for status and playlists length
   const previousStatus = useRef(playListStat);
@@ -88,7 +88,7 @@ function PlaylistsPage() {
     }
 
     // Show loading toast when status transitions to "loading"
-    if (status === "loading" && previousStatus.current === "loading") {
+    if (playListStat === "loading" && previousStatus.current === "loading") {
       toast.loading("Creating playlist...");
     }
 
@@ -97,13 +97,14 @@ function PlaylistsPage() {
   }, [dispatch, error, playListStat, playlists.length, reset]);
 
   // Event handler to toggle the dropdown visibility for playlist actions
-  const toggleDropdown = (id: string) => {
+  const toggleDropdown = (id: string, event: React.MouseEvent) => {
+    event.stopPropagation(); // Stop event propagation to prevent navigation
     setDropdownOpen((prev) => (prev === id ? null : id));
   };
 
-  // Event handler to handle opening a playlist (not yet implemented)
+  // Event handler to handle opening a playlist
   const handleOpen = (id: string) => {
-    navigate(`/playlists/${id}`); // Placeholder logic for opening a playlist
+    navigate(`/playlists/${id}`); // Navigate to the playlist details page
   };
 
   // Event handler to handle adding a playlist (dispatched to redux)
@@ -115,8 +116,9 @@ function PlaylistsPage() {
   const openAddModal = () => setModalOpen(true);
   const closeAddModal = () => setModalOpen(false);
 
-  // Event handler to delete a playlist (not yet implemented)
-  const handleDelete = (id: string) => {
+  // Event handler to delete a playlist
+  const handleDelete = (id: string, event: React.MouseEvent) => {
+    event.stopPropagation(); // Stop event propagation to prevent navigation
     dispatch(deletePlaylistRequest(id)); // Dispatch the request to delete a playlist
   };
 
@@ -137,20 +139,17 @@ function PlaylistsPage() {
       <PlaylistsContainer>
         {playlists.length === 0 && <Title>No playlists found</Title>}
         {playlists.map((playlist) => (
-          <PlaylistCard key={playlist._id}>
+          <PlaylistCard key={playlist._id} onClick={() => handleOpen(playlist._id)}>
             <PlaylistTitle>{playlist.name}</PlaylistTitle> {/* Playlist name */}
             <CountText>{playlist.songs.length} songs</CountText>{" "}
             {/* Song count */}
             {/* Playlist actions (dropdown for more options) */}
             <PlaylistActions>
-              <OptionButton onClick={() => toggleDropdown(playlist._id)}>
+              <OptionButton onClick={(event) => toggleDropdown(playlist._id, event)}>
                 <FaEllipsisV />
               </OptionButton>
               <DropdownMenu isVisible={dropDownOpen === playlist._id}>
-                <DropdownItem onClick={() => handleOpen(playlist._id)}>
-                  <FaPlay /> Open
-                </DropdownItem>
-                <DropdownItem onClick={() => handleDelete(playlist._id)}>
+                <DropdownItem onClick={(event) => handleDelete(playlist._id, event)}>
                   <FaTrash /> Delete
                 </DropdownItem>
               </DropdownMenu>

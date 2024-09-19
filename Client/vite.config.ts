@@ -9,7 +9,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "", // Server URL (Proxy)
+        target: "http://localhost:4000", // Server URL (Proxy)
         changeOrigin: true, // Changes the origin of the host header to the target URL
         secure: false, // Disables SSL certificate verification
       },
