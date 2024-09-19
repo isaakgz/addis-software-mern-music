@@ -11,7 +11,7 @@ import {
   removeSongFromPlaylist,
 } from "../controllers/userController.js";
 import validateObjectId from "../middlewares/validateObjectId.js";
-import {protect} from "../middlewares/authMiddleware.js"
+import { protect } from "../middlewares/authMiddleware.js";
 
 //create a router
 const router = express.Router();

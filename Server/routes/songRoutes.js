@@ -16,7 +16,7 @@ import { protect } from "../middlewares/authMiddleware.js";
 const router = express.Router();
 
 // route to get all songs and add a song
-router.route("/", protect).get(getSongs).post(addSong);
+router.route("/", protect).get(protect, getSongs).post(addSong);
 
 // route to get a song by id
 router.get("/id/:id", protect, getSongById);
@@ -31,7 +31,10 @@ router.get("/genre/:genre", protect, getSongByGenre);
 router.get("/album/:album", protect, getSongsByAlbum);
 
 // route to update song by id and remove song by id
-router.route("/:id", protect).put(updateSong).delete(deleteSong);
+router
+  .route("/:id", protect)
+  .put(protect, updateSong)
+  .delete(protect, deleteSong);
 
 //route to get song suggestions from the deezer API
 router.get("/suggestions", protect, getSuggestions);
